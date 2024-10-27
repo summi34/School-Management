@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seating Arrangement with Distribution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafc;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #4A90E2;
+            margin-bottom: 30px;
+        }
+
+        /* Form Styles */
+        form {
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        input[type="number"], input[type="checkbox"], input[type="submit"], button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        input[type="number"] {
+            border-color: #dcdcdc;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.2);
+        }
+        input[type="submit"], button.generate-btn {
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover, button.generate-btn:hover {
+            background-color: #357ABD;
+        }
+
+        /* Print Button Styles */
+        button.print-btn {
+            background-color: #F77F00;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        button.print-btn:hover {
+            background-color: #E65100;
+        }
+
+        /* Seating Grid Styles */
+        .seating-grid {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+        th {
+            background-color: #f4f6f8;
+            color: #333;
+            font-weight: 600;
+        }
+        td {
+            background-color: #f9fafc;
+            color: #555;
+        }
+        td:hover {
+            background-color: #f0f5ff;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            label, input, button {
+                font-size: 1rem;
+            }
+            td, th {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seating Arrangement with Unpaired Section Distribution</h1>
+
+        <!-- Step 1: Enter Number of Classes and Options -->
+        <form id="classForm">
+            <div class="form-group">
+                <label for="numClasses">Enter the number of classes you want to arrange (e.g., 2 or 12):</label>
+                <input type="number" id="numClasses" name="numClasses" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="randomClasses">Do you want random class pairings?</label>
+                <input type="checkbox" id="randomClasses" name="randomClasses">
+            </div>
+
+            <div class="form-group">
+                <label for="randomSections">Do you want random seating within sections?</label>
+                <input type="checkbox" id="randomSections" name="randomSections">
+            </div>
+
+            <input type="submit" value="Next">
+        </form>
+
+        <!-- Step 2: Dynamically Generated Section Inputs -->
+        <div id="sectionInputForm"></div>
+
+        <!-- Print Button -->
+        <button class="print-btn" onclick="printSeating()">Print Seating Arrangement</button>
+
+        <!-- Seating Grid Display -->
+        <div id="seatingGrid" class="seating-grid"></div>
+    </div>
+
+    <script type="text/javascript">
+        const classForm = document.getElementById('classForm');
+        const sectionInputForm = document.getElementById('sectionInputForm');
+        let classDetails = [];
+
+        // Event Listener for Step 1 Form Submission
+        classForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            sectionInputForm.innerHTML = '';  // Clear previous inputs if any
+            const numClasses = parseInt(document.getElementById('numClasses').value);
+
+            if (numClasses < 1) {
+                alert("Please enter at least one class.");
+                return;
+            }
+
+            // Dynamically create input fields for each class
+            for (let i = 1; i <= numClasses; i++) {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                div.innerHTML = `
+                    <h3>Class ${i} Details:</h3>
+                    <label for="sectionsClass${i}">Number of Sections in Class ${i}:</label>
+                    <input type="number" id="sectionsClass${i}" name="sectionsClass${i}" min="1" required>
+                    <div id="studentsPerSectionClass${i}"></div>
+                `;
+                sectionInputForm.appendChild(div);
+
+                // Event Listener for Sections Input
+                const sectionsInput = document.getElementById(`sectionsClass${i}`);
+                sectionsInput.addEventListener('input', function() {
+                    const sectionsCount = parseInt(sectionsInput.value);
+                    const studentsPerSectionDiv = document.getElementById(`studentsPerSectionClass${i}`);
+                    studentsPerSectionDiv.innerHTML = '';  // Clear any previous student inputs
+
+                    if (sectionsCount < 1) {
+                        alert("Please enter at least one section.");
+                        return;
+                    }
+
+                    for (let j = 1; j <= sectionsCount; j++) {
+                        const sectionLetter = String.fromCharCode(64 + j);  // Convert 1 -> A, 2 -> B, etc.
+                        const sectionDiv = document.createElement('div');
+                        sectionDiv.className = 'form-group';
+                        sectionDiv.innerHTML = `
+                            <label for="studentsClass${i}Section${sectionLetter}">Number of Students in Class ${i} Section ${sectionLetter}:</label>
+                            <input type="number" id="studentsClass${i}Section${sectionLetter}" name="studentsClass${i}Section${sectionLetter}" min="1" required>
+                        `;
+                        studentsPerSectionDiv.appendChild(sectionDiv);
+                    }
+                });
+            }
+
+            // Add Generate Button
+            const generateButton = document.createElement('button');
+            generateButton.textContent = "Generate Seating Arrangement";
+            generateButton.type = "button";
+            generateButton.className = "generate-btn";
+            sectionInputForm.appendChild(generateButton);
+
+            // Event Listener for Generate Button
+            generateButton.addEventListener('click', generateSeatingArrangement);
+        });
+
+        // Function to Shuffle an Array (Fisher-Yates Shuffle)
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to Generate Seating Arrangement
+        function generateSeatingArrangement() {
+            classDetails = [];  // Reset class details
+            const numClasses = parseInt(document.getElementById('numClasses').value);
+            const randomClasses = document.getElementById('randomClasses').checked;
+            const randomSections = document.getElementById('randomSections').checked;
+
+            // Collect Class and Section Details
+            for (let i = 1; i <= numClasses; i++) {
+                const sections = parseInt(document.getElementById(`sectionsClass${i}`).value);
+                let sectionDetails = [];
+                for (let j = 1; j <= sections; j++) {
+                    const students = parseInt(document.getElementById(`studentsClass${i}Section${String.fromCharCode(64 + j)}`).value);
+                    sectionDetails.push({ 
+                        sectionNum: String.fromCharCode(64 + j), 
+                        students: students 
+                    });
+                }
+                classDetails.push({ 
+                    classNum: i, 
+                    sections: sectionDetails 
+                });
+            }
+
+            // Randomize Class Order if Selected
+            let arrangedClasses = randomClasses ? shuffle([...classDetails]) : classDetails;
+
+            // Prepare Seating Grid
+            const seatingGrid = document.getElementById('seatingGrid');
+            seatingGrid.innerHTML = '';  // Clear previous grid
+
+            // Pair Classes and Handle Odd Classes
+            for (let i = 0; i < arrangedClasses.length; i += 2) {
+                const classA = arrangedClasses[i];
+                const classB = arrangedClasses[i + 1] || null;
+
+                if (classB) {
+                    // Normal pairing: ClassA and ClassB
+                    for (let s = 0; s < Math.max(classA.sections.length, classB.sections.length); s++) {
+                        const sectionA = classA.sections[s] || { sectionNum: '-', students: 0 };
+                        const sectionB = classB.sections[s] || { sectionNum: '-', students: 0 };
+
+                        let studentsClassA = Array.from({ length: sectionA.students }, (_, i) => `Class ${classA.classNum} ${sectionA.sectionNum} - Roll No: ${i + 1}`);
+                        let studentsClassB = Array.from({ length: sectionB.students }, (_, i) => `Class ${classB.classNum} ${sectionB.sectionNum} - Roll No: ${i + 1}`);
+
+                        if (randomSections) {
+                            studentsClassA = shuffle(studentsClassA);
+                            studentsClassB = shuffle(studentsClassB);
+                        }
+
+                        const table = document.createElement('table');
+                        const thead = document.createElement('thead');
+                        const headerRow = document.createElement('tr');
+                        const headerCell = document.createElement('th');
+                        headerCell.colSpan = 2;
+                        headerCell.textContent = `Class ${classA.classNum} ${sectionA.sectionNum} & Class ${classB.classNum} ${sectionB.sectionNum}`;
+                        headerRow.appendChild(headerCell);
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        const tbody = document.createElement('tbody');
+                        for (let j = 0; j < Math.max(studentsClassA.length, studentsClassB.length); j++) {
+                            const row = document.createElement('tr');
+                            const cellA = document.createElement('td');
+                            const cellB = document.createElement('td');
+                            cellA.textContent = studentsClassA[j] || '-';
+                            cellB.textContent = studentsClassB[j] || '-';
+                            row.appendChild(cellA);
+                            row.appendChild(cellB);
+                            tbody.appendChild(row);
+                        }
+                        table.appendChild(tbody);
+                        seatingGrid.appendChild(table);
+                    }
+                } else {
+                    // If classB is missing, split classA's students with other existing classes
+                    for (let s = 0; s < classA.sections.length; s++) {
+                        const sectionA = classA.sections[s];
+                        let studentsClassA = Array.from({ length: sectionA.students }, (_, i) => `Class ${classA.classNum} ${sectionA.sectionNum} - Roll No: ${i + 1}`);
+
+                        if (randomSections) {
+                            studentsClassA = shuffle(studentsClassA);
+                        }
+
+                        // Split studentsClassA between the previously paired classes
+                        const previousTables = seatingGrid.querySelectorAll('table');
+                        const splitIndex = Math.ceil(studentsClassA.length / previousTables.length);
+
+                        studentsClassA.forEach((student, idx) => {
+                            const tableIndex = Math.floor(idx / splitIndex);
+                            const table = previousTables[tableIndex];
+                            const tbody = table.querySelector('tbody');
+                            const newRow = document.createElement('tr');
+                            const newCell = document.createElement('td');
+                            newCell.textContent = student;
+                            newRow.appendChild(newCell);
+                            tbody.appendChild(newRow);
+                        });
+                    }
+                }
+            }
+        }
+
+        // Function to Print Seating Arrangement
+        function printSeating() {
+            const originalContent = document.body.innerHTML;
+            const seatingContent = document.getElementById('seatingGrid').innerHTML;
+
+            document.body.innerHTML = seatingContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            location.reload();  // Reload to restore event listeners and forms
+        }
+    </script>
+</body>
+</html>
