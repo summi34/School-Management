@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Date Sheet Generator (Version 1.0)</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 25px 50px 25px 25px;
+            background: linear-gradient(145deg, #ffffff, #e6e8ec);
+            border-radius: 15px;
+            box-shadow: 12px 12px 35px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #5a67d8;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            color: #333;
+            margin-top: 10px;
+            display: block;
+        }
+        input[type="text"], input[type="date"], input[type="number"], input[type="time"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dfe1e6;
+            border-radius: 6px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            border-color: #5a67d8;
+            outline: none;
+            box-shadow: 0 0 10px rgba(90, 103, 216, 0.5);
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #5a67d8;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        button:hover {
+            background-color: #4c51bf;
+            box-shadow: 0 15px 25px rgba(90, 103, 216, 0.4);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid #dfe1e6;
+        }
+        th {
+            background-color: #5a67d8;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px;
+        }
+        td {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+        td:first-child {
+            text-align: left;
+        }
+        .top-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #5a67d8;
+        }
+        .note {
+            color: #555;
+            margin-top: 20px;
+        }
+        .note-section {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .note-list {
+            list-style-type: decimal;
+        }
+        .add-note-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 10px;
+        }
+        .expired {
+            color: red;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #content {
+            display: none; /* Hide content by default */
+        }
+        .greeting-container {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #5a67d8;
+            padding: 40px 0px 0px 0px;
+            border-radius: 10px; /* Rounded corners */
+            background: linear-gradient(145deg, #ffffff, #e6e8ec); /* Subtle gradient background */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            max-width: 500px; /* Limit the width of the container */
+            margin: 50px auto; /* Center horizontally with top margin */
+        }
+
+        .greeting-text {
+            display: inline-block;
+            font-size: 28px; /* Larger text */
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #5a67d8, #8a5ee9); /* Gradient text color */
+            -webkit-background-clip: text; /* For gradient text effect */
+            -webkit-text-fill-color: transparent;
+            font-weight: 700; /* Bold text */
+            animation: fadeIn 1.5s ease-in-out; /* Fade-in animation */
+        }
+
+        /* Add a subtle hover effect */
+        .greeting-text:hover {
+            transform: scale(1.05); /* Slight enlargement on hover */
+            transition: transform 0.3s ease; /* Smooth transition for scaling */
+        }
+
+        /* Keyframes for fade-in animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        .navbar {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            width: 100%;
+            background-color: #4a90e2;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: #ddd;
+        }
+        .testing-banner {
+            width: 100%;
+            background-color: #ff5722;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="testing-banner">
+        TESTING MODE ENABLED
+    </div>
+<nav class="navbar">
+        <a href="arrangement.html">Seating Arrangement</a>
+        <a href="School Timetable.html">School Timetable</a>
+        <a href="index.html">Home</a>
+        <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
+        <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
+</nav>
+
+<div class="greeting-container" id="greeting">
+    <div class="greeting-text" id="welcomeText"></div>
+    <br>
+    <div class="greeting-text" id="madeInText"></div>
+</div>
+
+<div class="container" id="content">
+    <h1>Exam Date Sheet Generator (Version 1.0)</h1>
+    
+    <label for="schoolName">School Name:</label>
+    <input type="text" id="schoolName" placeholder="Enter School Name">
+    
+    <label for="examType">Date Sheet For (Examination Type):</label>
+    <input type="text" id="examType" placeholder="Half Yearly, Final, etc.">
+    
+    <label for="reportingTime">Student Reporting Time:</label>
+    <input type="time" id="reportingTime">
+
+    <label for="startDate">Exam Start Date:</label>
+    <input type="date" id="startDate">
+
+    <label for="examTiming">Exam Timing:</label>
+    <input type="time" id="examTiming">
+    
+    <label for="examDuration">Exam Duration (in hours):</label>
+    <input type="number" id="examDuration" placeholder="Enter Exam Duration in Hours">
+    
+    <label for="classList">Select Classes (Check those applicable):</label>
+    <div id="classList">
+        <input type="checkbox" id="nursery" value="Nursery"> Nursery
+        <input type="checkbox" id="lkg" value="LKG"> LKG
+        <input type="checkbox" id="ukg" value="UKG"> UKG
+        <input type="checkbox" id="class1" value="Class 1"> Class 1
+        <input type="checkbox" id="class2" value="Class 2"> Class 2
+        <input type="checkbox" id="class3" value="Class 3"> Class 3
+        <input type="checkbox" id="class4" value="Class 4"> Class 4
+        <input type="checkbox" id="class5" value="Class 5"> Class 5
+        <input type="checkbox" id="class6" value="Class 6"> Class 6
+        <input type="checkbox" id="class7" value="Class 7"> Class 7
+        <input type="checkbox" id="class8" value="Class 8"> Class 8
+        <input type="checkbox" id="class9" value="Class 9"> Class 9
+        <input type="checkbox" id="class10" value="Class 10"> Class 10
+        <input type="checkbox" id="class11" value="Class 11"> Class 11
+        <input type="checkbox" id="class12" value="Class 12"> Class 12
+    </div>
+
+    <div id="subjectsContainer"></div>
+    
+    <label for="holidays">Enter Holiday Dates If Want Between Exam (comma-separated, e.g., 2024-09-25,2024-10-02):</label>
+    <input type="text" id="holidays" placeholder="Enter Holidays">
+
+    <label>
+        <input type="checkbox" id="wantGaps"> Do you want gaps between exams?
+    </label>
+
+    <label>
+        <input type="checkbox" id="allowSaturday"> Should exams be conducted on Saturday?
+    </label>
+
+    <label for="note">Additional Notes:</label>
+    <input type="text" id="note" placeholder="Enter additional notes"></input>
+    <button type="button" class="add-note-btn" onclick="addNote()">Add Note</button>
+    <ul id="noteList" class="note-list"></ul>
+
+    <button onclick="generateDateSheet()">Generate Date Sheet</button>
+
+    <div id="dateSheet"></div>
+
+    <button onclick="printDateSheet()" style="margin-top: 20px;">Print Date Sheet</button>
+
+</div>
+
+<div id="expiredMessage" class="expired" style="display:none;">
+    Exam Date Sheet Genrator Has Expired and Is No Longer Available. <br>
+    Kindly Buy Subcription To Use It Again. <br>
+    Contact: 7908288262  
+</div>
+
+<script>
+
+        // Variables for text animation
+    const welcomeText = "Welcome To SmartSchool.AI";
+    const welcomeTextElement = document.getElementById('welcomeText');
+    let charIndex = 0;
+
+    // Function to animate text
+    function animateText(text, element, callback) {
+        if (charIndex < text.length) {
+            element.innerHTML += text.charAt(charIndex);
+            charIndex++;
+            setTimeout(() => animateText(text, element, callback), 100);
+        } else {
+            charIndex = 0;
+            if (callback) callback(); // Run callback after animation
+        }
+    }
+
+        window.onload = function() {
+        // Animate "Welcome To SmartSchool.AI" first
+        animateText(welcomeText, welcomeTextElement, function() {
+                // After both animations, show the main content but do not hide the greeting
+                document.getElementById('content').style.display = 'block'; // Show the content
+                // The greeting will stay visible without being hidden
+            });
+    };
+
+    const startDateValid = new Date('2024-09-21T00:00:00');
+    const expirationDate = new Date('2025-03-31T23:59:59');
+    const today = new Date();
+
+    if (today >= startDateValid && today <= expirationDate) {
+        document.getElementById('content').style.display = 'block';
+        document.getElementById('expiredMessage').style.display = 'none';
+    } else {
+        document.getElementById('content').style.display = 'none';
+        document.getElementById('expiredMessage').style.display = 'block';
+    }
+
+    let noteCount = 0;
+
+    function generateSubjectInputs() {
+        const subjectsContainer = document.getElementById('subjectsContainer');
+        subjectsContainer.innerHTML = ''; // Clear existing inputs
+
+        const selectedClasses = [];
+        const classList = document.querySelectorAll('#classList input[type=checkbox]:checked');
+        classList.forEach((checkbox) => selectedClasses.push(checkbox.value));
+
+        selectedClasses.forEach((className, index) => {
+            const label = document.createElement('label');
+            label.textContent = `Enter Subjects for ${className} (comma-separated):`;
+            subjectsContainer.appendChild(label);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `subjects${className}`;
+            input.placeholder = `Enter Subjects for ${className}`;
+            subjectsContainer.appendChild(input);
+        });
+    }
+
+    document.querySelectorAll('#classList input[type=checkbox]').forEach(checkbox => {
+        checkbox.addEventListener('change', generateSubjectInputs);
+    });
+
+    function addNote() {
+        const noteText = document.getElementById('note').value;
+        if (noteText.trim() !== '') {
+            noteCount++;
+            const noteList = document.getElementById('noteList');
+            const listItem = document.createElement('li');
+            listItem.textContent = noteText;
+            noteList.appendChild(listItem);
+            document.getElementById('note').value = ''; // Clear input field
+        }
+    }
+
+    function generateDateSheet() {
+        const schoolName = document.getElementById('schoolName').value;
+        const examType = document.getElementById('examType').value;
+        const examTiming = document.getElementById('examTiming').value;
+        const reportingTime = document.getElementById('reportingTime').value;
+        const examDuration = parseFloat(document.getElementById('examDuration').value);
+        const startDate = new Date(document.getElementById('startDate').value);
+        const holidaysInput = document.getElementById('holidays').value;
+        const holidays = holidaysInput ? holidaysInput.split(',').map(h => new Date(h.trim())) : [];
+        const wantGaps = document.getElementById('wantGaps').checked;
+        const allowSaturday = document.getElementById('allowSaturday').checked;
+
+        const dateSheetDiv = document.getElementById('dateSheet');
+        dateSheetDiv.innerHTML = ''; // Clear previous date sheet
+
+        let dispersalTime = calculateDispersalTime(examTiming, examDuration);
+
+        let topInfo = `<div class="top-info">
+            <div>${schoolName}</div>
+            <div>${examType}</div>
+            <div>Reporting Time: ${reportingTime}</div>
+            <div>Exam Timing: ${examTiming} To ${dispersalTime}</div>
+        </div>`;
+        dateSheetDiv.innerHTML = topInfo;
+
+        let table = document.createElement('table');
+        let headerRow = table.insertRow(0);
+        headerRow.insertCell(0).textContent = "Date (Day)";
+
+        const selectedClasses = [];
+        const classList = document.querySelectorAll('#classList input[type=checkbox]:checked');
+        classList.forEach((checkbox) => selectedClasses.push(checkbox.value));
+
+        selectedClasses.forEach((className, index) => {
+            headerRow.insertCell(index + 1).textContent = className;
+        });
+
+        let currentDate = new Date(startDate);
+        let dayCount = 0;
+        let maxExams = 0;
+
+        const examsForClasses = [];
+        selectedClasses.forEach((className) => {
+            const subjectsInput = document.getElementById(`subjects${className}`).value;
+            const subjects = subjectsInput ? subjectsInput.split(',').map(s => s.trim()) : [];
+            shuffle(subjects);
+            examsForClasses.push(subjects);
+            maxExams = Math.max(maxExams, subjects.length);
+        });
+
+        while (dayCount < maxExams) {
+            if (holidays.some(h => h.getTime() === currentDate.getTime())) {
+                currentDate.setDate(currentDate.getDate() + 1);
+                continue;
+            }
+
+            if (currentDate.getDay() === 0) {
+                currentDate.setDate(currentDate.getDate() + 1);
+                continue;
+            }
+
+            if (currentDate.getDay() === 6 && !allowSaturday) {
+                currentDate.setDate(currentDate.getDate() + 1);
+                continue;
+            }
+
+            let row = table.insertRow(table.rows.length);
+
+            // Format Date with Day Name
+            let formattedDate = `${currentDate.toLocaleDateString('en-GB')} (${currentDate.toLocaleDateString('en-GB', { weekday: 'long' })})`;
+            row.insertCell(0).textContent = formattedDate;
+
+            for (let j = 0; j < selectedClasses.length; j++) {
+                let examSubject = (dayCount < examsForClasses[j].length)
+                    ? examsForClasses[j][dayCount] : "No Exam";
+                row.insertCell(j + 1).textContent = examSubject;
+            }
+
+            currentDate.setDate(currentDate.getDate() + 1);
+            if (wantGaps && dayCount < maxExams - 1 && currentDate.getDay() !== 0) {
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            dayCount++;
+        }
+
+        dateSheetDiv.appendChild(table);
+
+        const noteList = document.getElementById('noteList');
+        if (noteList.childNodes.length > 0) {
+            let noteSection = `<div class="note-section"><strong>Notes:</strong></div>`;
+            dateSheetDiv.innerHTML += noteSection;
+            dateSheetDiv.appendChild(noteList.cloneNode(true));
+        }
+    }
+
+    function calculateDispersalTime(examStartTime, examDuration) {
+        let [hours, minutes] = examStartTime.split(':').map(Number);
+        let additionalMinutes = 0;
+
+        if (!Number.isInteger(examDuration)) {
+            let decimalPart = examDuration - Math.floor(examDuration);
+            additionalMinutes = Math.round(decimalPart * 60);
+            examDuration = Math.floor(examDuration);
+        }
+
+        hours += examDuration;
+        minutes += additionalMinutes;
+
+        if (minutes >= 60) {
+            hours += Math.floor(minutes / 60);
+            minutes = minutes % 60;
+        }
+
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function printDateSheet() {
+        const dateSheetDiv = document.getElementById('dateSheet');
+        const originalContent = document.body.innerHTML;
+        const printContent = dateSheetDiv.innerHTML;
+
+        document.body.innerHTML = `<html><head><title>Print Date Sheet</title></head><body>${printContent}</body></html>`;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+</script>
+</body>
+</html>

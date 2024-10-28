@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Multilingual Question Paper Generator</title>
+  <style>
+    /* General Styling */
+    body {
+       font-family: 'Roboto', 'Noto Sans Devanagari', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Kannada', 'Noto Sans Malayalam', 'Noto Sans Bengali', 'Noto Sans Gujarati', 'Noto Sans Oriya', 'Noto Sans Gurmukhi', 'Noto Nastaliq Urdu', 'Noto Sans Meetei Mayek', 'Noto Sans Ol Chiki', sans-serif;
+       background-color: #f4f4f9;
+       color: #333;
+       margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.8rem;
+      color: #264653;
+      margin-bottom: 40px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .container:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2a9d8f;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #2a9d8f;
+      outline: none;
+      box-shadow: 0 0 8px rgba(42, 157, 143, 0.3);
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 20px;
+      color: white;
+      background-color: #e76f51;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #f4a261;
+      transform: translateY(-2px);
+    }
+
+    #generated-paper {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      animation: fadeIn 1s ease-in-out;
+      min-height: 300px;
+      overflow: auto;
+    }
+
+    .section-header {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+      color: #2a9d8f;
+    }
+
+    .subheading {
+      text-align: left;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .question-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .question-number {
+      font-weight: bold;
+      margin-right: 10px;
+      color: #264653;
+      flex-shrink: 0;
+    }
+
+    .question-text {
+      flex-grow: 1;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .toolbar button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: black;
+      color: white;
+    }
+
+    .toolbar button:hover {
+      background-color: darkturquoise;
+    }
+
+    #generated-paper[contenteditable="true"] {
+      border: 2px solid #2a9d8f;
+      background-color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #loadingSpinner {
+      display: none;
+      margin: 20px auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #e76f51;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+    }
+
+    #dropZone {
+      border: 2px dashed #2a9d8f;
+      padding: 40px;
+      width: 90%;
+      text-align: center;
+      background-color: #f4f4f9;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #264653;
+      transition: background-color 0.3s, border-color 0.3s;
+      margin-bottom: 20px;
+    }
+
+    #dropZone p {
+      font-size: 18px;
+      margin: 0;
+      color: #264653;
+    }
+
+    #dropZone.highlight {
+      background-color: #e9f5f3;
+      border-color: #2a9d8f;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+    .navbar {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            width: 100%;
+            background-color: #4a90e2;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: #ddd;
+        }
+    .testing-banner {
+            width: 100%;
+            background-color: #ff5722;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+  </style>
+</head>
+<body>
+  <div class="testing-banner">
+        TESTING MODE ENABLED
+    </div>
+  <nav class="navbar">
+        <a href="arrangement.html">Seating Arrangement</a>
+        <a href="School Timetable.html">School Timetable</a>
+        <a href="index.html">Home</a>
+        <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
+        <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
+    </nav>
+  <div class="container">
+    <h1>Advanced Multilingual Exam Paper Generator</h1>
+
+    <div class="form-group">
+      <label for="docxUpload" style="text-align: center; font-size: 20px; color:darkturquoise;">Upload Files (.docx, .pdf, .txt) (Multiple allowed):</label>
+      <input type="file" oninput="processAndDisplayQuestions()" id="docxUpload" multiple accept=".docx,.pdf,.txt" required>
+      
+      <!-- Drag-and-drop zone -->
+      <div id="dropZone">
+        <p>Drag & drop files here or click to browse</p>
+      </div>
+    </div>
+
+    <div id="section-inputs"></div>
+
+    <div class="form-group">
+      <label for="schoolName">School Name:</label>
+      <input type="text" id="schoolName" placeholder="Enter the school name" value="GPA">
+    </div>
+
+    <div class="form-group">
+      <label for="examType">Examination Type:</label>
+      <input type="text" id="examType" placeholder="Enter the examination type" value="FINAL">
+    </div>
+
+    <div class="form-group">
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" placeholder="Enter the subject" value="MATHS">
+    </div>
+
+    <div class="form-group">
+      <label for="class">Class:</label>
+      <input type="text" id="class" placeholder="Enter the class" value="1">
+    </div>
+
+    <div class="form-group">
+      <label for="duration">Duration (in hours/minutes):</label>
+      <input type="text" id="duration" placeholder="Enter the exam duration" value="2">
+    </div>
+
+    <!-- Language Selection Input Field -->
+    <div class="form-group">
+      <label for="language">Select Language:</label>
+      <select id="language">
+        <option value="English">English</option>
+        <option value="Hindi">Hindi</option>
+        <option value="Bengali">Bengali</option>
+        <option value="Tamil">Tamil</option>
+        <option value="Telugu">Telugu</option>
+        <option value="Kannada">Kannada</option>
+        <option value="Malayalam">Malayalam</option>
+        <option value="Gujarati">Gujarati</option>
+        <option value="Oriya">Oriya</option>
+        <option value="Punjabi">Punjabi</option>
+        <option value="Urdu">Urdu</option>
+        <option value="Marathi">Marathi</option>
+      </select>
+    </div>
+
+    <button id="generatePaper" onclick="generateFinalPaper()">Generate Final Paper</button>
+    <div id="loadingSpinner"></div>
+
+    <div class="toolbar" style="display: none;" id="toolbar">
+      <button onclick="execCmd('bold')"><b>Bold</b></button>
+      <button onclick="execCmd('italic')"><i>Italic</i></button>
+      <button onclick="execCmd('underline')"><u>Underline</u></button>
+      <button onclick="execCmd('insertOrderedList')">Numbered List</button>
+      <button onclick="execCmd('insertUnorderedList')">Bulleted List</button>
+      <button onclick="execCmd('justifyLeft')">Align Left</button>
+      <button onclick="execCmd('justifyCenter')">Align Center</button>
+      <button onclick="execCmd('justifyRight')">Align Right</button>
+      <button onclick="execCmd('undo')">Undo</button>
+      <button onclick="execCmd('redo')">Redo</button>
+      <button onclick="toggleEditMode()">Exit Edit Mode</button>
+    </div>
+
+    <div id="generated-paper" contenteditable="false"></div>
+
+    <button id="editButton" style="display:none;" onclick="toggleEditMode()">Edit Generated Paper</button>
+    <button id="printButton" style="display:none;" onclick="printGeneratedPaper()">Print Question Paper</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+  <script>
+    let extractedQuestionsBySection = {};
+    let uniqueQuestionsSet = new Set(); 
+    let currentSectionCount = 0;
+
+    function convertToLanguageNumerals(number, language) {
+      const numerals = {
+        "Hindi": ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'],
+        "Bengali": ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'],
+        "Tamil": ['௦', '௧', '௨', '௩', '௪', '௫', '௬', '௭', '௮', '௯'],
+        "Telugu": ['౦', '౧', '౨', '౩', '౪', '౫', '౬', '౭', '౮', '౯'],
+        "Kannada": ['೦', '೧', '೨', '೩', '೪', '೫', '೬', '೭', '೮', '೯'],
+        "Malayalam": ['൦', '൧', '൨', '൩', '൪', '൫', '൬', '൭', '൮', '൯'],
+        "Gujarati": ['૦', '૧', '૨', '૩', '૪', '૫', '૬', '૭', '૮', '૯'],
+        "Oriya": ['୦', '୧', '୨', '୩', '୪', '୫', '୬', '୭', '୮', '୯'],
+        "Punjabi": ['੦', '੧', '੨', '੩', '੪', '੫', '੬', '੭', '੮', '੯'],
+        "Urdu": ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'],
+        "Marathi": ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९']
+      };
+
+      const selectedNumerals = numerals[language] || [];
+      return number.toString().split('').map(digit => selectedNumerals[digit] || digit).join('');
+    }
+
+    function detectLanguage(text) {
+      if (/[०१२३४५६७८९]/.test(text)) {
+        return 'Hindi';
+      } else if (/[০১২৩৪৫৬৭৮৯]/.test(text)) {
+        return 'Bengali';
+      }
+      return 'English';
+    }
+
+    async function extractTextFromDocx(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          mammoth.extractRawText({ arrayBuffer: event.target.result })
+            .then(result => {
+              resolve(result.value);
+            })
+            .catch(reject);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    async function extractTextFromPDF(file) {
+      const pdf = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
+      let extractedText = '';
+      
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        extractedText += textContent.items.map(item => item.str).join(' ');
+      }
+      
+      return extractedText;
+    }
+
+    async function extractTextFromTxt(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          resolve(event.target.result);
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    async function processAndDisplayQuestions() {
+      const docxFiles = document.getElementById('docxUpload').files;
+      let fileNames = [];
+      for (const file of docxFiles) {
+        fileNames.push(file.name);
+      }
+      document.getElementById('dropZone').innerHTML = `<p>Uploaded Files: ${fileNames.join(', ')}</p>`;
+      await processQuestions(docxFiles);
+      createSectionInputs();
+    }
+
+    async function processQuestions(files) {
+      extractedQuestionsBySection = {};
+      uniqueQuestionsSet.clear();
+      currentSectionCount = 0;
+
+      for (const file of files) {
+        let text = '';
+        if (file.name.endsWith('.docx')) {
+          text = await extractTextFromDocx(file);
+        } else if (file.name.endsWith('.pdf')) {
+          text = await extractTextFromPDF(file);
+        } else if (file.name.endsWith('.txt')) {
+          text = await extractTextFromTxt(file);
+        }
+        categorizeQuestionsBySection(text);
+      }
+    }
+
+    function categorizeQuestionsBySection(text) {
+      const sectionRegex = /(Section\s+[A-Z])/gi;
+      const sections = text.split(sectionRegex).filter(Boolean);
+
+      let currentSection = '';
+      let detectedLanguage = detectLanguage(text);
+
+      for (let i = 0; i < sections.length; i++) {
+        const sectionText = sections[i].trim();
+
+        if (sectionText.match(/Section\s+[A-Z]/i)) {
+          currentSection = sectionText.replace(/Section/i, '').trim();
+          if (!extractedQuestionsBySection[currentSection]) {
+            extractedQuestionsBySection[currentSection] = [];
+            currentSectionCount++;
+          }
+        } else {
+          const questions = extractQuestionsByNumber(sectionText, detectedLanguage);
+          if (currentSection in extractedQuestionsBySection) {
+            questions.forEach(question => {
+              if (!uniqueQuestionsSet.has(question)) {
+                uniqueQuestionsSet.add(question);
+                extractedQuestionsBySection[currentSection].push(question);
+              }
+            });
+          }
+        }
+      }
+    }
+
+    function extractQuestionsByNumber(text, language) {
+      const regex = /\s*(\(?[\d०১২৩৪५६७৮৯]+[\.\)\-\s]*.*?)(?=\n\s*\(?[\d०১২৩४৫६७৮৯]+[\.\)\-\s]|\n*$)/gs;
+      const questions = text.match(regex) || [];
+      return questions.map(q => q.replace(/^\s*\(?[\d०১২৩৪५६۷८९]+[\.\)\-\s]*/, '').trim());
+    }
+
+    function createSectionInputs() {
+      const sectionInputDiv = document.getElementById('section-inputs');
+      sectionInputDiv.innerHTML = '';
+
+      for (const section in extractedQuestionsBySection) {
+        sectionInputDiv.innerHTML += `
+          <div class="form-group">
+            <label for="section${section}Questions">Number of questions for Section ${section} (Max ${extractedQuestionsBySection[section].length}):</label>
+            <input type="number" id="section${section}Questions" min="0" max="${extractedQuestionsBySection[section].length}" value="${Math.min(50, extractedQuestionsBySection[section].length)}">
+          </div>
+          <div class="form-group">
+            <label for="section${section}Marks">Marks for Section ${section} (Float Allowed):</label>
+            <input type="number" step="0.01" id="section${section}Marks" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label for="section${section}Subheading">Subheading for Section ${section}:</label>
+            <input type="text" id="section${section}Subheading" placeholder="Enter subheading for this section" value="">
+          </div>
+        `;
+      }
+
+      document.getElementById('generatePaper').style.display = 'block';
+    }
+
+    function generateFinalPaper() {
+      // Show the spinner
+      const spinner = document.getElementById('loadingSpinner');
+      spinner.style.display = 'block';
+
+      // Delay for animation (simulate loading)
+      setTimeout(() => {
+        const generatedPaperDiv = document.getElementById('generated-paper');
+        generatedPaperDiv.innerHTML = ''; // Reset paper content
+
+        const schoolName = document.getElementById('schoolName').value;
+        const examType = document.getElementById('examType').value;
+        const subject = document.getElementById('subject').value;
+        const className = document.getElementById('class').value;
+        const duration = document.getElementById('duration').value;
+        
+        // Get the selected language from the dropdown
+        const selectedLanguage = document.getElementById('language').value;
+
+        let totalMarks = 0;
+        let questionCounter = 1;
+
+        for (const section in extractedQuestionsBySection) {
+          const questionLimit = document.getElementById(`section${section}Questions`).value;
+          const marksPerQuestion = parseFloat(document.getElementById(`section${section}Marks`).value);
+          totalMarks += parseFloat(marksPerQuestion) * parseInt(questionLimit) || 0;
+        }
+
+        let totalMarksDisplay = (totalMarks % 1 === 0) ? totalMarks.toFixed(0) : totalMarks.toFixed(2);
+
+        generatedPaperDiv.innerHTML += `
+          <h2 style="text-align: center; margin-bottom: 10px;">${schoolName}</h2>
+          <h4 style="text-align: center; margin-top: 0;">${examType}</h4>
+          <h4 style="text-align: left;">Class: ${className}</h4>
+          <h4 style="text-align: left; margin-top: -10px;">Subject: ${subject}</h4>
+          <h4 style="text-align: right; margin-top: -40px; border-bottom: 5px black solid;">Duration: ${duration}</h4>
+          <h4 style="text-align: right; margin-top: -70px; margin-bottom: 50px;">Total Marks: ${totalMarksDisplay}</h4>
+        `;
+
+        for (const section in extractedQuestionsBySection) {
+          const questionLimit = document.getElementById(`section${section}Questions`).value;
+          const sectionMarks = parseFloat(document.getElementById(`section${section}Marks`).value) || 0;
+          const shuffledQuestions = shuffleArray(extractedQuestionsBySection[section]);
+          const selectedQuestions = shuffledQuestions.slice(0, questionLimit);
+
+          const subheading = document.getElementById(`section${section}Subheading`).value;
+
+          if (selectedQuestions.length > 0) {
+            generatedPaperDiv.innerHTML += `
+              <div class="section-header">Section ${section} (Each Question ${sectionMarks} Marks)</div>
+            `;
+
+            if (subheading) {
+              generatedPaperDiv.innerHTML += `
+                <div class="subheading">${subheading}</div>
+              `;
+            }
+
+            selectedQuestions.forEach(question => {
+              let formattedQuestion = question.replace(/\|/g, '<br>');
+
+              // Convert questionCounter to the selected language numeral format
+              let questionNumber = convertToLanguageNumerals(questionCounter, selectedLanguage);
+
+              generatedPaperDiv.innerHTML += `
+                <div class="question-item">
+                  <div class="question-number">${questionNumber}.</div>
+                  <div class="question-text">${formattedQuestion}</div>
+                </div>
+              `;
+              questionCounter++;
+            });
+          }
+        }
+
+        // Hide the spinner
+        spinner.style.display = 'none';
+        document.getElementById('editButton').style.display = 'inline-block';
+        document.getElementById('printButton').style.display = 'inline-block';
+      }, 2000);  // Simulate a 2-second delay for generating the paper
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function printGeneratedPaper() {
+      const printContent = document.getElementById('generated-paper').innerHTML;
+      const originalContent = document.body.innerHTML;
+
+      document.body.innerHTML = printContent;
+      window.print();
+      document.body.innerHTML = originalContent;
+    }
+
+    function execCmd(command) {
+      document.execCommand(command, false, null);
+    }
+
+    function toggleEditMode() {
+      const paperDiv = document.getElementById('generated-paper');
+      const toolbar = document.getElementById('toolbar');
+      const editButton = document.getElementById('editButton');
+      const isEditable = paperDiv.getAttribute('contenteditable') === 'true';
+
+      if (isEditable) {
+        paperDiv.setAttribute('contenteditable', 'false');
+        toolbar.style.display = 'none';
+        editButton.textContent = 'Edit Generated Paper';
+      } else {
+        paperDiv.setAttribute('contenteditable', 'true');
+        toolbar.style.display = 'flex';
+        editButton.textContent = 'Exit Edit Mode';
+      }
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('docxUpload');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+      document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => {
+        dropZone.classList.add('highlight');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => {
+        dropZone.classList.remove('highlight');
+      }, false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      fileInput.files = files;
+      processAndDisplayQuestions();
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+  </script>
+</body>
+</html>

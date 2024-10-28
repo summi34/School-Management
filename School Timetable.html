@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Advanced School Routine Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .routine-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .routine-table th, .routine-table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .routine-table th {
+      background-color: #007bff;
+      color: white;
+    }
+    .routine-output {
+      margin-top: 40px;
+      display: none;
+    }
+    .navbar {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            width: 100%;
+            background-color: #4a90e2;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: #ddd;
+        }
+    .testing-banner {
+            width: 100%;
+            background-color: #ff5722;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+  </style>
+</head>
+<body>
+  <div class="testing-banner">
+        TESTING MODE ENABLED
+    </div>
+  <nav class="navbar">
+        <a href="arrangement.html">Seating Arrangement</a>
+        <a href="School Timetable.html">School Timetable</a>
+        <a href="index.html">Home</a>
+        <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
+        <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
+    </nav>
+  <div class="container">
+    <h1>Advanced School Routine Generator</h1>
+    <form id="routineForm">
+      <label for="schoolName">School Name:</label>
+      <input type="text" id="schoolName" required>
+
+      <label for="numClasses">Number of Classes:</label>
+      <input type="number" id="numClasses" min="1" required oninput="generateClassInputs()">
+
+      <label for="assignClassTeacher">Assign Class Teachers?</label>
+      <select id="assignClassTeacher" onchange="toggleClassTeacherAssignment()">
+        <option value="yes">I will assign class teachers</option>
+        <option value="no">Randomly assign class teachers</option>
+      </select>
+
+      <div id="sectionsInput"></div>
+      <div id="subjectsInput"></div>
+
+      <label for="numTeachers">Number of Teachers:</label>
+      <input type="number" id="numTeachers" min="1" required oninput="generateTeacherInputs()">
+
+      <div id="teachersInput"></div>
+
+      <label for="periods">Number of Periods per Day:</label>
+      <input type="number" id="periods" min="1" required>
+
+      <label for="periodDuration">Duration of Each Period (minutes):</label>
+      <input type="number" id="periodDuration" min="1" required>
+
+      <label for="entryTime">Entry Time (HH:MM, 24-hour format):</label>
+      <input type="time" id="entryTime" required>
+
+      <label for="breakDuration">Tiffin Break Duration (minutes):</label>
+      <input type="number" id="breakDuration" min="1" required>
+
+      <label for="weekdays">Routine Days (comma-separated, e.g., Monday,Tuesday):</label>
+      <input type="text" id="weekdays" placeholder="e.g., Monday,Tuesday,Wednesday..." required>
+
+      <button type="button" onclick="generateRoutine()">Generate Routine</button>
+    </form>
+
+    <div id="routineOutput" class="routine-output">
+      <h2>Generated Routine</h2>
+      <div id="routineContent"></div>
+    </div>
+  </div>
+
+  <script>
+    let classTeacherAssigned = false;
+
+    // Toggle input fields for class teacher assignment
+    function toggleClassTeacherAssignment() {
+      classTeacherAssigned = document.getElementById('assignClassTeacher').value === 'yes';
+      generateClassInputs();
+    }
+
+    // Generate inputs for class and sections
+    function generateClassInputs() {
+      const numClasses = parseInt(document.getElementById('numClasses').value);
+      const sectionsInputDiv = document.getElementById('sectionsInput');
+      const subjectsInputDiv = document.getElementById('subjectsInput');
+      sectionsInputDiv.innerHTML = '';
+      subjectsInputDiv.innerHTML = '';
+
+      for (let i = 1; i <= numClasses; i++) {
+        sectionsInputDiv.innerHTML += `
+          <label for="sectionsClass${i}">Number of Sections for Class ${i}:</label>
+          <input type="number" id="sectionsClass${i}" min="1" required> <br>
+        `;
+
+        if (classTeacherAssigned) {
+          sectionsInputDiv.innerHTML += `<div id="classTeachersClass${i}"></div>`;
+        }
+
+        subjectsInputDiv.innerHTML += `
+          <label for="subjectsClass${i}">Subjects for Class ${i} (comma-separated):</label>
+          <input type="text" style="width: 70%" id="subjectsClass${i}" required> <br>
+        `;
+      }
+    }
+
+    // Generate inputs for teachers and their classes
+    function generateTeacherInputs() {
+      const numTeachers = parseInt(document.getElementById('numTeachers').value);
+      const teachersInputDiv = document.getElementById('teachersInput');
+      teachersInputDiv.innerHTML = '';
+
+      for (let i = 1; i <= numTeachers; i++) {
+        teachersInputDiv.innerHTML += `
+          <label for="teacherName${i}">Teacher ${i} Name:</label>
+          <input type="text" id="teacherName${i}" required> <br>
+          <label for="teacherSubjects${i}">Subjects Taught by Teacher ${i} (comma-separated):</label>
+          <input type="text" style="width: 60%" id="teacherSubjects${i}" required> <br>
+          <label for="teacherClasses${i}">Classes Taught by Teacher ${i} (comma-separated, e.g., 1,2,3):</label>
+          <input type="text" id="teacherClasses${i}" required> <br> <br>
+        `;
+      }
+    }
+
+    // Function to randomly assign class teachers
+    function assignRandomClassTeachers(numClasses, sectionsPerClass, teachers) {
+      const classTeachers = {};
+
+      for (let cls = 1; cls <= numClasses; cls++) {
+        for (let sec = 1; sec <= sectionsPerClass[cls]; sec++) {
+          const randomTeacher = teachers[Math.floor(Math.random() * teachers.length)].name;
+          classTeachers[`Class${cls}Section${sec}`] = randomTeacher;
+        }
+      }
+      return classTeachers;
+    }
+
+    // Function to add minutes to a time string
+    function addMinutesToTime(time, minutesToAdd) {
+      const [hours, minutes] = time.split(':').map(Number);
+      const totalMinutes = hours * 60 + minutes + minutesToAdd;
+      const newHours = Math.floor(totalMinutes / 60) % 24;
+      const newMinutes = totalMinutes % 60;
+      return `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
+    }
+
+    function calculateDispersalTime(entryTime, periodDuration, periodsPerDay, breakDuration) {
+      let totalMinutes = periodDuration * periodsPerDay + breakDuration; // Total time spent in school
+      return addMinutesToTime(entryTime, totalMinutes); // Calculate the final time after adding periods and break
+    }
+
+    // Function to generate the routine
+    function generateRoutine() {
+      const schoolName = document.getElementById('schoolName').value;
+      const numClasses = parseInt(document.getElementById('numClasses').value);
+      const periodsPerDay = parseInt(document.getElementById('periods').value);
+      const periodDuration = parseInt(document.getElementById('periodDuration').value);
+      const entryTime = document.getElementById('entryTime').value;
+      const breakDuration = parseInt(document.getElementById('breakDuration').value);
+      const weekdays = document.getElementById('weekdays').value.split(',');
+      const dispersalTime = calculateDispersalTime(entryTime, periodDuration, periodsPerDay, breakDuration);
+      const breakAfterPeriod = periodsPerDay/2; 
+
+
+
+      const sectionsPerClass = {};
+      const subjectsPerClass = {};
+      let classTeachers = {};
+
+      for (let i = 1; i <= numClasses; i++) {
+        sectionsPerClass[i] = parseInt(document.getElementById(`sectionsClass${i}`).value);
+        subjectsPerClass[i] = document.getElementById(`subjectsClass${i}`).value.split(',').map(sub => sub.trim());
+      }
+
+      const numTeachers = parseInt(document.getElementById('numTeachers').value);
+      const teachers = [];
+      for (let i = 1; i <= numTeachers; i++) {
+        const teacherName = document.getElementById(`teacherName${i}`).value;
+        const teacherSubjects = document.getElementById(`teacherSubjects${i}`).value.split(',').map(sub => sub.trim());
+        const teacherClasses = document.getElementById(`teacherClasses${i}`).value.split(',').map(cls => cls.trim());
+        teachers.push({ name: teacherName, subjects: teacherSubjects, classes: teacherClasses });
+      }
+
+      // Assign class teachers based on user choice
+      if (classTeacherAssigned) {
+        for (let cls = 1; cls <= numClasses; cls++) {
+          for (let sec = 1; sec <= sectionsPerClass[cls]; sec++) {
+            classTeachers[`Class${cls}Section${sec}`] = prompt(`Enter Class Teacher for Class ${cls} Section ${sec}`);
+          }
+        }
+      } else {
+        classTeachers = assignRandomClassTeachers(numClasses, sectionsPerClass, teachers);
+      }
+
+      let routineHtml = `<h3>School: ${schoolName}</h3>`;
+      routineHtml += `<p>Entry Time: ${entryTime}</p>`;
+      routineHtml += `<p>Period Duration: ${periodDuration} minutes</p>`;
+      routineHtml += `<p>Tiffin Break Duration: ${breakDuration} minutes</p>`;
+      routineHtml += `<p>Dispersal Time: ${dispersalTime} </p>`;
+      routineHtml += `<h4>Routine for Classes</h4>`;
+
+      // Assign periods while avoiding teacher overlap
+      const teacherAssignments = {};
+
+      for (let cls = 1; cls <= numClasses; cls++) {
+        for (let sec = 1; sec <= sectionsPerClass[cls]; sec++) {
+          routineHtml += `<h5>Class ${cls} Section ${sec} (Class Teacher: ${classTeachers[`Class${cls}Section${sec}`]})</h5>`;
+          routineHtml += `<table class="routine-table"><thead><tr><th>Day</th>`;
+
+          let currentTime = entryTime;
+          for (let i = 1; i <= periodsPerDay; i++) {
+            if (i === breakAfterPeriod + 1) {
+               currentTime = addMinutesToTime(currentTime, breakDuration);
+            }
+            const periodStart = currentTime;
+            currentTime = addMinutesToTime(currentTime, periodDuration);
+            const periodEnd = currentTime;
+            routineHtml += `<th>Period ${i} (${periodStart}-${periodEnd})</th>`;
+          }
+
+          routineHtml += `</tr></thead><tbody>`;
+
+          weekdays.forEach(day => {
+            let schedule = [];
+            for (let i = 0; i < periodsPerDay; i++) {
+              // Assign a teacher that is not currently assigned elsewhere
+              let subject = subjectsPerClass[cls][Math.floor(Math.random() * subjectsPerClass[cls].length)];
+              let availableTeacher = teachers.find(teacher => {
+                return teacher.subjects.includes(subject) && teacher.classes.includes(cls.toString()) &&
+                       (!teacherAssignments[teacher.name] || teacherAssignments[teacher.name][day]?.indexOf(i) === -1);
+              });
+
+              schedule.push(`<td>${subject} (${availableTeacher?.name || 'TBA'})</td>`);
+
+              // Mark teacher as assigned for that period and day
+              if (availableTeacher) {
+                if (!teacherAssignments[availableTeacher.name]) teacherAssignments[availableTeacher.name] = {};
+                if (!teacherAssignments[availableTeacher.name][day]) teacherAssignments[availableTeacher.name][day] = [];
+                teacherAssignments[availableTeacher.name][day].push(i);
+              }
+            }
+            routineHtml += `<tr><td>${day}</td>${schedule.join('')}</tr>`;
+          });
+
+          routineHtml += `</tbody></table>`;
+        }
+      }
+
+      document.getElementById('routineContent').innerHTML = routineHtml;
+      document.getElementById('routineOutput').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
