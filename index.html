@@ -25,41 +25,48 @@
 
         /* Container for content */
         .container {
-            max-width: 1200px;
+            max-width: 90%;
             margin: 20px;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         /* Navigation bar styling */
         .navbar {
-            margin-top: 50px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 15px;
             background-color: #4a90e2;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            top: 0;
+            z-index: 1000;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         .navbar a:hover {
             color: #ddd;
         }
 
+        /* Heading Styling */
         h1 {
-            text-align: center;
+            font-size: 1.8rem;
             color: #4a90e2;
+            margin: 70px 0 20px;
         }
 
+        /* Section Link Styling */
         .section-link {
             display: flex;
             flex-direction: column;
@@ -70,22 +77,27 @@
             border-radius: 8px;
             text-decoration: none;
             color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
 
         .section-link:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .section-link h2 {
+            font-size: 1.4rem;
             color: #5a67d8;
             margin-bottom: 10px;
         }
 
         .section-link p {
             color: #555;
+            font-size: 0.9rem;
         }
+
+        /* Testing Banner */
         .testing-banner {
             width: 100%;
             background-color: #ff5722;
@@ -94,9 +106,46 @@
             padding: 10px;
             font-weight: bold;
             letter-spacing: 1px;
-            position: fixed;
             top: 0;
-            z-index: 1000;
+            z-index: 1100;
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .navbar a {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .section-link h2 {
+                font-size: 1.3rem;
+            }
+
+            .section-link p {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .section-link h2 {
+                font-size: 1.2rem;
+            }
+
+            .section-link p {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -110,7 +159,7 @@
         <a href="School Timetable.html">School Timetable</a>
         <a href="index.html">Home</a>
         <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
-        <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
+        <a href="Question Paper Generator 3.html">Question Paper Generator</a>
     </nav>
 
     <!-- Page Container -->
@@ -133,7 +182,7 @@
             <p>Plan exam schedules and generate date sheets for all classes.</p>
         </a>
 
-        <a href="Question Paper Generator 3.html" class="section-link" id="question-paper-genrator">
+        <a href="Question Paper Generator 3.html" class="section-link" id="question-paper-generator">
             <h2>Question Paper Generator</h2>
             <p>Effortlessly create customized question papers for all classes and subjects.</p>
         </a>
