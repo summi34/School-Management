@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            width: 100%;
+            background-color: #4a90e2;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: #ddd;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+        }
+
+        .section-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: #f0f2f5;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s;
+        }
+
+        .section-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-link h2 {
+            color: #5a67d8;
+            margin-bottom: 10px;
+        }
+
+        .section-link p {
+            color: #555;
+        }
+        .testing-banner {
+            width: 100%;
+            background-color: #ff5722;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="testing-banner">
+        TESTING MODE ENABLED
+    </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="arrangement.html">Seating Arrangement</a>
+        <a href="School Timetable.html">School Timetable</a>
+        <a href="index.html">Home</a>
+        <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
+        <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
+    </nav>
+
+    <!-- Page Container -->
+    <div class="container">
+        <h1>Welcome to School Management Dashboard (TESTING MODE)</h1>
+
+        <!-- Links to each section -->
+        <a href="arrangement.html" class="section-link" id="seating-arrangement">
+            <h2>Seating Arrangement</h2>
+            <p>Create and manage student seating arrangements with ease.</p>
+        </a>
+
+        <a href="School Timetable.html" class="section-link" id="timetable">
+            <h2>School Timetable</h2>
+            <p>Generate and manage daily and weekly school timetables.</p>
+        </a>
+
+        <a href="Exam date sheet genrator (Version 1.0).html" class="section-link" id="exam-schedule">
+            <h2>Exam Date Sheet</h2>
+            <p>Plan exam schedules and generate date sheets for all classes.</p>
+        </a>
+
+        <a href="Question Paper Generator 3.html" class="section-link" id="question-paper-genrator">
+            <h2>Question Paper Generator</h2>
+            <p>Effortlessly create customized question papers for all classes and subjects.</p>
+        </a>
+    </div>
+</body>
+</html>
