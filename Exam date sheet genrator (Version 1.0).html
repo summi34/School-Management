@@ -18,6 +18,8 @@
             border-radius: 15px;
             box-shadow: 12px 12px 35px rgba(0, 0, 0, 0.15);
         }
+        
+        }
         h1 {
             text-align: center;
             color: #5a67d8;
@@ -196,314 +198,889 @@
             padding: 10px;
             font-weight: bold;
             letter-spacing: 1px;
+            position: fixed;
             top: 0;
             z-index: 1000;
+        }
+        .remove-button {
+            background-color: #ff4d4d;
+            width: 70px;
+            height: 20px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 5px; /* Reduced padding for a smaller button */
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 12px; /* Smaller font size */
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-button:hover {
+            background-color: #ff1a1a;
+        }
+
+        .draggable {
+            cursor: move;
+            user-select: none;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .draggable:hover {
+            background-color: #f0f4ff;
+            transform: scale(1.02);
+        }
+
+        .draggable.dragging {
+            opacity: 0.5;
+            background-color: #e8e8e8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .drag-over {
+            background-color: #e3f2fd;
+            border: 2px dashed #2196f3;
+        }
+
+        .invalid-drop {
+            animation: shake 0.5s ease-in-out;
+            background-color: #ffebee;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Visual feedback for valid/invalid drop targets */
+        .valid-target {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .invalid-target {
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+        #undoButton, #redoButton {
+            width: 48%; /* Take up nearly half the width */
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #undoButton:disabled, #redoButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #undoButton:hover:not(:disabled), #redoButton:hover:not(:disabled) {
+            background-color: #357abd;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar a {
+                margin: 5px 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="testing-banner">
-        TESTING MODE ENABLED
-    </div>
-<nav class="navbar">
+    <div class="testing-banner">TESTING MODE ENABLED</div>
+    <nav class="navbar">
         <a href="arrangement.html">Seating Arrangement</a>
         <a href="School Timetable.html">School Timetable</a>
         <a href="index.html">Home</a>
         <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
         <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
-</nav>
+    </nav>
 
-<div class="greeting-container" id="greeting">
-    <div class="greeting-text" id="welcomeText"></div>
-    <br>
-    <div class="greeting-text" id="madeInText"></div>
-</div>
-
-<div class="container" id="content">
-    <h1>Exam Date Sheet Generator (Version 1.0)</h1>
-    
-    <label for="schoolName">School Name:</label>
-    <input type="text" id="schoolName" placeholder="Enter School Name">
-    
-    <label for="examType">Date Sheet For (Examination Type):</label>
-    <input type="text" id="examType" placeholder="Half Yearly, Final, etc.">
-    
-    <label for="reportingTime">Student Reporting Time:</label>
-    <input type="time" id="reportingTime">
-
-    <label for="startDate">Exam Start Date:</label>
-    <input type="date" id="startDate">
-
-    <label for="examTiming">Exam Timing:</label>
-    <input type="time" id="examTiming">
-    
-    <label for="examDuration">Exam Duration (in hours):</label>
-    <input type="number" id="examDuration" placeholder="Enter Exam Duration in Hours">
-    
-    <label for="classList">Select Classes (Check those applicable):</label>
-    <div id="classList">
-        <input type="checkbox" id="nursery" value="Nursery"> Nursery
-        <input type="checkbox" id="lkg" value="LKG"> LKG
-        <input type="checkbox" id="ukg" value="UKG"> UKG
-        <input type="checkbox" id="class1" value="Class 1"> Class 1
-        <input type="checkbox" id="class2" value="Class 2"> Class 2
-        <input type="checkbox" id="class3" value="Class 3"> Class 3
-        <input type="checkbox" id="class4" value="Class 4"> Class 4
-        <input type="checkbox" id="class5" value="Class 5"> Class 5
-        <input type="checkbox" id="class6" value="Class 6"> Class 6
-        <input type="checkbox" id="class7" value="Class 7"> Class 7
-        <input type="checkbox" id="class8" value="Class 8"> Class 8
-        <input type="checkbox" id="class9" value="Class 9"> Class 9
-        <input type="checkbox" id="class10" value="Class 10"> Class 10
-        <input type="checkbox" id="class11" value="Class 11"> Class 11
-        <input type="checkbox" id="class12" value="Class 12"> Class 12
+    <div class="greeting-container" id="greeting">
+        <div class="greeting-text" id="welcomeText"></div>
+        <br>
+        <div class="greeting-text" id="madeInText"></div>
     </div>
 
-    <div id="subjectsContainer"></div>
-    
-    <label for="holidays">Enter Holiday Dates If Want Between Exam (comma-separated, e.g., 2024-09-25,2024-10-02):</label>
-    <input type="text" id="holidays" placeholder="Enter Holidays">
+    <div class="container" id="content">
+        <h1>Exam Date Sheet Generator (Version 1.0)</h1>
 
-    <label>
-        <input type="checkbox" id="wantGaps"> Do you want gaps between exams?
-    </label>
+        <label for="schoolName">School Name:</label>
+        <input type="text" id="schoolName" placeholder="Enter School Name">
+        <div id="schoolNameError" class="error-message"></div>
 
-    <label>
-        <input type="checkbox" id="allowSaturday"> Should exams be conducted on Saturday?
-    </label>
+        <label for="examType">Date Sheet For (Examination Type):</label>
+        <input type="text" id="examType" placeholder="Half Yearly, Final, etc. ">
 
-    <label for="note">Additional Notes:</label>
-    <input type="text" id="note" placeholder="Enter additional notes"></input>
-    <button type="button" class="add-note-btn" onclick="addNote()">Add Note</button>
-    <ul id="noteList" class="note-list"></ul>
+        <label for="startDate">Exam Start Date:</label>
+        <input type="date" id="startDate">
 
-    <button onclick="generateDateSheet()">Generate Date Sheet</button>
+        <label for="reportingTime">Student Reporting Time:</label>
+        <input type="time" id="reportingTime">
 
-    <div id="dateSheet"></div>
+        <label for="examTiming">Exam Start Timing:</label>
+        <input type="time" id="examTiming">
 
-    <button onclick="printDateSheet()" style="margin-top: 20px;">Print Date Sheet</button>
+        <label for="examDuration">Exam Duration (in hours):</label>
+        <input type="number" id="examDuration" placeholder="Enter Exam Duration in Hours">
 
-</div>
+        <label for="classList">Select Classes (Check those applicable):</label> <br>
+        <div id="classList">
+            Nursery <input type="checkbox" id="nursery" value="Nursery"> <br>
+            LKG <input type="checkbox" id="lkg" value="LKG"> <br>
+            UKG <input type="checkbox" id="ukg" value="UKG"> <br>
+            Class 1 <input type="checkbox" id="class1" value="Class 1"> <br>
+            Class 2 <input type="checkbox" id="class2" value="Class 2"> <br>
+            Class 3 <input type="checkbox" id="class3" value="Class 3"> <br>
+            Class 4 <input type="checkbox" id="class4" value="Class 4"> <br>
+            Class 5 <input type="checkbox" id="class5" value="Class 5"> <br>
+            Class 6 <input type="checkbox" id="class6" value="Class 6"> <br>
+            Class 7 <input type="checkbox" id="class7" value="Class 7"> <br>
+            Class 8 <input type="checkbox" id="class8" value="Class 8"> <br>
+            Class 9 <input type="checkbox" id="class9" value="Class 9"> <br>
+            Class 10 <input type="checkbox" id="class10" value="Class 10"> <br>
+            Class 11 <input type="checkbox" id="class11" value="Class 11"> <br>
+            Class 12 <input type="checkbox" id="class12" value="Class 12"> <br>
+        </div>
 
-<div id="expiredMessage" class="expired" style="display:none;">
-    Exam Date Sheet Genrator Has Expired and Is No Longer Available. <br>
-    Kindly Buy Subcription To Use It Again. <br>
-    Contact: 7908288262  
-</div>
+        <div id="subjectsContainer"></div>
 
-<script>
+        <label for="holidayDate">Enter Holiday Dates:</label>
+        <input type="date" id="holidayDate">
+        <button type="button" onclick="addHoliday()">Add Holiday</button>
 
+        <ul id="holidayList"></ul>
+
+        <input type="hidden" id="holidays">
+
+        <label>
+            <input type="checkbox" id="wantGaps"> Do you want gaps between exams?
+        </label>
+
+        <label>
+            <input type="checkbox" id="allowSaturday"> Should exams be conducted on Saturday?
+        </label>
+
+        <label for="note">Additional Notes:</label>
+        <input type="text" id="note" placeholder="Enter additional notes"></input>
+        <button type="button" class="add-note-btn" onclick="addNote()">Add Note</button>
+        <ul id="noteList" class="note-list"></ul>
+
+        <button onclick="generateDateSheet()">Generate Date Sheet</button>
+
+        <div id="dateSheet"></div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <button id="undoButton" onclick="undoLastAction()" disabled>Undo</button>
+            <button id="redoButton" onclick="redoLastAction()" disabled>Redo</button>
+        </div>
+
+        <button onclick="printDateSheet()" style="margin-top: 20px;">Print Date Sheet</button>
+        <button onclick="deleteAllData()" style="background-color: #ff4d4d; color: white; margin-top: 20px;">Delete All Data</button>
+    </div>
+
+    <div id="expiredMessage" class="expired" style="display:none;">
+        Exam Date Sheet Genrator Has Expired and Is No Longer Available. <br>
+        Kindly Buy Subscription To Use It Again. <br>
+        Contact: 7908288262  
+    </div>
+
+    <script>
         // Variables for text animation
-    const welcomeText = "Welcome To SmartSchool.AI";
-    const welcomeTextElement = document.getElementById('welcomeText');
-    let charIndex = 0;
+        const welcomeText = "Welcome To SmartSchool.AI";
+        const welcomeTextElement = document.getElementById('welcomeText');
+        let charIndex = 0;
 
-    // Function to animate text
-    function animateText(text, element, callback) {
-        if (charIndex < text.length) {
-            element.innerHTML += text.charAt(charIndex);
-            charIndex++;
-            setTimeout(() => animateText(text, element, callback), 100);
-        } else {
-            charIndex = 0;
-            if (callback) callback(); // Run callback after animation
+        // Function to animate text
+        function animateText(text, element, callback) {
+            if (charIndex < text.length) {
+                element.innerHTML += text.charAt(charIndex);
+                charIndex++;
+                setTimeout(() => animateText(text, element, callback), 100);
+            } else {
+                charIndex = 0;
+                if (callback) callback(); // Run callback after animation
+            }
         }
-    }
 
         window.onload = function() {
-        // Animate "Welcome To SmartSchool.AI" first
-        animateText(welcomeText, welcomeTextElement, function() {
+            // Animate "Welcome To SmartSchool.AI" first
+            animateText(welcomeText, welcomeTextElement, function() {
                 // After both animations, show the main content but do not hide the greeting
                 document.getElementById('content').style.display = 'block'; // Show the content
-                // The greeting will stay visible without being hidden
             });
-    };
+        };
 
-    const startDateValid = new Date('2024-09-21T00:00:00');
-    const expirationDate = new Date('2025-03-31T23:59:59');
-    const today = new Date();
+        const startDateValid = new Date('2024-09-21T00:00:00');
+        const expirationDate = new Date('2025-03-31T23:59:59');
+        const today = new Date();
 
-    if (today >= startDateValid && today <= expirationDate) {
-        document.getElementById('content').style.display = 'block';
-        document.getElementById('expiredMessage').style.display = 'none';
-    } else {
-        document.getElementById('content').style.display = 'none';
-        document.getElementById('expiredMessage').style.display = 'block';
-    }
+        if (today >= startDateValid && today <= expirationDate) {
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('expiredMessage').style.display = 'none';
+        } else {
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('expiredMessage').style.display = 'block';
+        }
 
-    let noteCount = 0;
+        let noteCount = 0;
+        let subjectsData = {}; // Object to hold subjects for each class
 
-    function generateSubjectInputs() {
-        const subjectsContainer = document.getElementById('subjectsContainer');
-        subjectsContainer.innerHTML = ''; // Clear existing inputs
+        function generateSubjectInputs() {
+            const subjectsContainer = document.getElementById('subjectsContainer');
+            const selectedClasses = [];
+            const classList = document.querySelectorAll('#classList input[type=checkbox]:checked');
 
-        const selectedClasses = [];
-        const classList = document.querySelectorAll('#classList input[type=checkbox]:checked');
-        classList.forEach((checkbox) => selectedClasses.push(checkbox.value));
+            // Save existing subject data before clearing
+            classList.forEach((checkbox) => {
+                const className = checkbox.value;
+                const existingInput = document.getElementById(`subjects${className}`);
+                if (existingInput) {
+                    subjectsData[className] = existingInput.value; // Save existing value
+                }
+            });
 
-        selectedClasses.forEach((className, index) => {
-            const label = document.createElement('label');
-            label.textContent = `Enter Subjects for ${className} (comma-separated):`;
-            subjectsContainer.appendChild(label);
+            subjectsContainer.innerHTML = ''; // Clear existing inputs
 
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `subjects${className}`;
-            input.placeholder = `Enter Subjects for ${className}`;
-            subjectsContainer.appendChild(input);
+            // Create new inputs for selected classes
+            classList.forEach((checkbox) => {
+                const className = checkbox.value;
+
+                // Create a label for the input
+                const label = document.createElement('label');
+                label.textContent = `Enter Subjects for ${className} (comma-separated):`;
+                subjectsContainer.appendChild(label);
+
+                // Create an input field for subjects
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `subjects${className}`;
+                input.placeholder = `Enter Subjects for ${className}`;
+                input.value = subjectsData[className] || ''; // Set existing subjects
+
+                // Update subjectsData when the input changes
+                input.addEventListener('input', function() {
+                    subjectsData[className] = this.value; // Store subjects for this class
+                });
+
+                // Append the input field to the container
+                subjectsContainer.appendChild(input);
+            });
+        }
+
+        // Event listener for class checkboxes
+        document.querySelectorAll('#classList input[type=checkbox]').forEach(checkbox => {
+            checkbox.addEventListener('change', generateSubjectInputs); // ```html
+            // Call function on change
         });
-    }
 
-    document.querySelectorAll('#classList input[type=checkbox]').forEach(checkbox => {
-        checkbox.addEventListener('change', generateSubjectInputs);
-    });
+        function addNote() {
+            const noteText = document.getElementById('note').value;
+            if (noteText.trim() !== '') {
+                const noteList = document.getElementById('noteList');
+                const listItem = document.createElement('li');
+                listItem.textContent = noteText;
 
-    function addNote() {
-        const noteText = document.getElementById('note').value;
-        if (noteText.trim() !== '') {
-            noteCount++;
+                // Create a remove button
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.className = 'remove-button';
+                removeButton.onclick = function() {
+                    if (confirm("Are you sure you want to remove this note?")) {
+                        noteList.removeChild(listItem);
+                    }
+                };
+
+                listItem.appendChild(removeButton);
+                noteList.appendChild(listItem);
+                document.getElementById('note').value = '';
+            }
+        }
+
+        function generateDateSheet() {
+            const schoolName = document.getElementById('schoolName').value.trim();
+            if (!schoolName) {
+                document.getElementById('schoolNameError').textContent = "Please enter a school name.";
+                return;
+            } else {
+                document.getElementById('schoolNameError').textContent = "";
+            }
+
+            const examType = document.getElementById('examType').value;
+            const examTiming = document.getElementById('examTiming').value;
+            const reportingTime = document.getElementById('reportingTime').value;
+            const examDuration = parseFloat(document.getElementById('examDuration').value);
+            const startDate = new Date(document.getElementById('startDate').value);
+            const holidaysInput = document.getElementById('holidays').value;
+            const holidays = holidaysInput ? holidaysInput.split(',').map(h => new Date(h.trim())) : [];
+            const wantGaps = document.getElementById('wantGaps').checked;
+            const allowSaturday = document.getElementById('allowSaturday').checked;
+
+            const dateSheetDiv = document.getElementById('dateSheet');
+            dateSheetDiv.innerHTML = ''; // Clear previous date sheet
+
+            let dispersalTime = calculateDispersalTime(examTiming, examDuration);
+
+            let topInfo = `<div class="top-info">
+                <div>${schoolName}</div>
+                <div>${examType}</div>
+                <div>Reporting Time: ${reportingTime}</div>
+                <div>Exam Timing: ${examTiming} To ${dispersalTime}</div>
+            </div>`;
+            dateSheetDiv.innerHTML = topInfo;
+
+            let table = document.createElement('table');
+            table.id = 'dateSheetTable';
+            let headerRow = table.insertRow(0);
+            headerRow.insertCell(0).textContent = "Date (Day)";
+
+            const selectedClasses = [];
+            const classList = document.querySelectorAll('#classList input[type=checkbox]:checked');
+            classList.forEach((checkbox) => selectedClasses.push(checkbox.value));
+
+            selectedClasses.forEach((className, index) => {
+                headerRow.insertCell(index + 1).textContent = className;
+            });
+
+            let currentDate = new Date(startDate);
+            let dayCount = 0;
+            let maxExams = 0;
+
+            const examsForClasses = [];
+            selectedClasses.forEach((className) => {
+                const subjectsInput = document.getElementById(`subjects${className}`).value;
+                const subjects = subjectsInput ? subjectsInput.split(',').map(s => s.trim()) : [];
+                shuffle(subjects);
+                examsForClasses.push(subjects);
+                maxExams = Math.max(maxExams, subjects.length);
+            });
+
+            while (dayCount < maxExams) {
+                if (holidays.some(h => h.getTime() === currentDate.getTime())) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    continue;
+                }
+
+                if (currentDate.getDay() === 0) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    continue;
+                }
+
+                if (currentDate.getDay() === 6 && !allowSaturday) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    continue;
+                }
+
+                let row = table.insertRow(table.rows.length);
+
+                // Format Date with Day Name
+                let formattedDate = `${currentDate.toLocaleDateString('en-GB')} (${currentDate.toLocaleDateString('en-GB', { weekday: 'long' })})`;
+                row.insertCell(0).textContent = formattedDate;
+
+                for (let j = 0; j < selectedClasses.length; j++) {
+                    let examSubject = (dayCount < examsForClasses[j].length)
+                        ? examsForClasses[j][ dayCount] : "No Exam";
+                    let cell = row.insertCell(j + 1);
+                    cell.textContent = examSubject;
+                    cell.classList.add('draggable');
+                    cell.setAttribute('draggable', 'true');
+                }
+
+                currentDate.setDate(currentDate.getDate() + 1);
+                if (wantGaps && dayCount < maxExams - 1 && currentDate.getDay() !== 0) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
+                dayCount++;
+            }
+
+            dateSheetDiv.appendChild(table);
+
             const noteList = document.getElementById('noteList');
-            const listItem = document.createElement('li');
-            listItem.textContent = noteText;
-            noteList.appendChild(listItem);
-            document.getElementById('note').value = ''; // Clear input field
+            if (noteList.childNodes.length > 0) {
+                let noteSection = `<div class="note-section"><strong>Notes:</strong></div>`;
+                dateSheetDiv.innerHTML += noteSection;
+
+                // Create a new list to avoid including the remove buttons
+                const notesWithoutButtons = document.createElement('ul');
+                noteList.childNodes.forEach(note => {
+                    const newListItem = document.createElement('li');
+                    newListItem.textContent = note.textContent.replace('Remove', '').trim(); // Remove 'Remove' text
+                    notesWithoutButtons.appendChild(newListItem);
+                });
+                dateSheetDiv.appendChild(notesWithoutButtons);
+            }
+
+            // Add event listeners for drag and drop
+            addDragAndDropListeners();
         }
-    }
 
-    function generateDateSheet() {
-        const schoolName = document.getElementById('schoolName').value;
-        const examType = document.getElementById('examType').value;
-        const examTiming = document.getElementById('examTiming').value;
-        const reportingTime = document.getElementById('reportingTime').value;
-        const examDuration = parseFloat(document.getElementById('examDuration').value);
-        const startDate = new Date(document.getElementById('startDate').value);
-        const holidaysInput = document.getElementById('holidays').value;
-        const holidays = holidaysInput ? holidaysInput.split(',').map(h => new Date(h.trim())) : [];
-        const wantGaps = document.getElementById('wantGaps').checked;
-        const allowSaturday = document.getElementById('allowSaturday').checked;
+        let actionHistory = []; // Store drag-and-drop actions
+        let currentHistoryIndex = -1; // Track current position in history
 
-        const dateSheetDiv = document.getElementById('dateSheet');
-        dateSheetDiv.innerHTML = ''; // Clear previous date sheet
+        function recordAction(sourceCell, targetCell, sourceText, targetText) {
+            // Remove any future actions if we're not at the latest point
+            if (currentHistoryIndex < actionHistory.length - 1) {
+                actionHistory = actionHistory.slice(0, currentHistoryIndex + 1);
+            }
 
-        let dispersalTime = calculateDispersalTime(examTiming, examDuration);
+            // Add new action to history
+            actionHistory.push({
+                sourceCell: sourceCell,
+                targetCell: targetCell,
+                sourceText: sourceText,
+                targetText: targetText
+            });
 
-        let topInfo = `<div class="top-info">
-            <div>${schoolName}</div>
-            <div>${examType}</div>
-            <div>Reporting Time: ${reportingTime}</div>
-            <div>Exam Timing: ${examTiming} To ${dispersalTime}</div>
-        </div>`;
-        dateSheetDiv.innerHTML = topInfo;
+            // Move history index
+            currentHistoryIndex++;
 
-        let table = document.createElement('table');
-        let headerRow = table.insertRow(0);
-        headerRow.insertCell(0).textContent = "Date (Day)";
+            // Optionally limit history size
+            if (actionHistory.length > 20) {
+                actionHistory.shift();
+                currentHistoryIndex--;
+            }
 
-        const selectedClasses = [];
-        const classList = document.querySelectorAll('#classList input[type=checkbox]:checked');
-        classList.forEach((checkbox) => selectedClasses.push(checkbox.value));
+            // Update undo/redo button states
+            updateUndoRedoButtons();
+        }
 
-        selectedClasses.forEach((className, index) => {
-            headerRow.insertCell(index + 1).textContent = className;
+        function undoLastAction() {
+            if (currentHistoryIndex < 0) return;
+
+            const action = actionHistory[currentHistoryIndex];
+            
+            // Restore original text
+            action.sourceCell.textContent = action.sourceText;
+            action.targetCell.textContent = action.targetText;
+
+            // Move history index back
+            currentHistoryIndex--;
+
+            // Update button states
+            updateUndoRedoButtons();
+        }
+
+        function redoLastAction() {
+            if (currentHistoryIndex >= actionHistory.length - 1) return;
+
+            // Move history index forward
+            currentHistoryIndex++;
+
+            const action = actionHistory[currentHistoryIndex];
+            
+            // Reapply the action
+            action.sourceCell.textContent = action.targetText;
+            action.targetCell.textContent = action.sourceText;
+
+            // Update button states
+            updateUndoRedoButtons();
+        }
+
+        function updateUndoRedoButtons() {
+            const undoButton = document.getElementById('undoButton');
+            const redoButton = document.getElementById('redoButton');
+
+            if (undoButton) {
+                undoButton.disabled = (currentHistoryIndex < 0);
+            }
+
+            if (redoButton) {
+                redoButton.disabled = (currentHistoryIndex >= actionHistory.length - 1);
+            }
+        }
+
+        function addDragAndDropListeners() {
+            const table = document.getElementById('dateSheetTable');
+            const draggables = table.querySelectorAll('.draggable');
+            const cells = table.querySelectorAll('td');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', dragStart);
+                draggable.addEventListener('dragend', dragEnd);
+                draggable.addEventListener('dragenter', dragEnter);
+                draggable.addEventListener('dragleave', dragLeave);
+            });
+
+            cells.forEach(cell => {
+                cell.addEventListener('dragover', dragOver);
+                cell.addEventListener('drop', drop);
+            });
+        }
+
+        function dragStart(e) {
+            this.classList.add('dragging');
+            // Store the column index to ensure subjects stay within their class
+            e.dataTransfer.setData('columnIndex', this.cellIndex);
+        }
+
+        function dragEnd(e) {
+            this.classList.remove('dragging');
+            // Remove any remaining drag effects
+            document.querySelectorAll('.drag-over').forEach(element => {
+                element.classList.remove('drag-over');
+            });
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            if (this.classList.contains('draggable')) {
+                const draggedColumnIndex = e.dataTransfer.getData('columnIndex');
+                if (this.cellIndex === parseInt(draggedColumnIndex)) {
+                    this.classList.add('valid-target');
+                } else {
+                    this.classList.add('invalid-target');
+                }
+            }
+        }
+
+        function dragLeave(e) {
+            this.classList.remove('valid-target', 'invalid-target', 'drag-over');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            if (this.classList.contains('draggable')) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const draggable = document.querySelector('.dragging');
+            
+            // Only allow drops within the same column (class)
+            if (draggable && this.classList.contains('draggable')) {
+                const sourceColumnIndex = draggable.cellIndex;
+                const targetColumnIndex = this.cellIndex;
+
+                if (sourceColumnIndex === targetColumnIndex) {
+                    // Store original texts before swapping
+                    const sourceText = draggable.textContent;
+                    const targetText = this.textContent;
+
+                    // Swap subjects
+                    draggable.textContent = targetText;
+                    this.textContent = sourceText;
+                    
+                    // Record this action
+                    recordAction(draggable, this, sourceText, targetText);
+                    
+                    // Add success visual feedback
+                    this.style.backgroundColor = '#e8f5e9';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 500);
+                } else {
+                    // Invalid drop - show error animation
+                    this.classList.add('invalid-drop');
+                    setTimeout(() => {
+                        this.classList.remove('invalid-drop');
+                    }, 500);
+                    alert("Invalid drop! You can only swap subjects within the same class.");
+                }
+            }
+
+            // Clean up
+            this.classList.remove('drag-over', 'valid-target', 'invalid-target');
+            draggable?.classList.remove('dragging');
+        }
+
+        // Add this helper function to show a notification
+        function showNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background-color: ${isError ? '#ff5252' : '#4caf50'};
+                color: white;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function calculateDispersalTime(examStartTime, examDuration) {
+            let [hours, minutes] = examStartTime.split(':').map(Number);
+            let additionalMinutes = 0;
+
+            if (!Number.isInteger(examDuration)) {
+                let decimalPart = examDuration - Math.floor(examDuration);
+                additionalMinutes = Math.round(decimalPart * 60);
+                examDuration = Math.floor(examDuration);
+            }
+
+            hours += examDuration;
+            minutes += additionalMinutes;
+
+            if (minutes >= 60) {
+                hours += Math.floor(minutes / 60);
+                minutes = minutes % 60;
+            }
+
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function printDateSheet() {
+            const dateSheetDiv = document.getElementById('dateSheet');
+            const originalContent = document.body.innerHTML;
+            const printContent = dateSheetDiv.innerHTML;
+
+            document.body.innerHTML = `<html><head><title>Print Date Sheet</title></head><body>${printContent}</body></html>`;
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+
+        // Automatically load data whenever the school name input field changes
+        document.getElementById('schoolName').addEventListener('blur', loadData);
+
+        // Save data when any relevant field changes
+        const fieldsToWatch = [
+            'examType', 'startDate', 'reportingTime', 'examTiming', 
+            'examDuration', 'holidays', 'wantGaps', 'allowSaturday'
+        ];
+
+        fieldsToWatch.forEach(id => {
+            const element = document.getElementById(id);
+            element.addEventListener('input', saveData);
         });
 
-        let currentDate = new Date(startDate);
-        let dayCount = 0;
-        let maxExams = 0;
-
-        const examsForClasses = [];
-        selectedClasses.forEach((className) => {
-            const subjectsInput = document.getElementById(`subjects${className}`).value;
-            const subjects = subjectsInput ? subjectsInput.split(',').map(s => s.trim()) : [];
-            shuffle(subjects);
-            examsForClasses.push(subjects);
-            maxExams = Math.max(maxExams, subjects.length);
+        // Save data whenever a class checkbox or subject input is updated
+        document.querySelectorAll('#classList input[type=checkbox]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                generateSubjectInputs();
+                saveData();
+            });
         });
 
-        while (dayCount < maxExams) {
-            if (holidays.some(h => h.getTime() === currentDate.getTime())) {
-                currentDate.setDate(currentDate.getDate() + 1);
-                continue;
+        // Save data when notes are added or removed
+        function addNote() {
+            const noteText = document.getElementById('note').value.trim();
+            if (noteText !== '') {
+                const noteList = document.getElementById('noteList');
+                const listItem = document.createElement('li');
+                listItem.textContent = noteText;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.className = 'remove-button';
+                removeButton.onclick = function() {
+                    if (confirm("Are you sure you want to remove this note?")) {
+                        noteList.removeChild(listItem);
+                        saveData(); // Save data whenever a note is removed
+                    }
+                };
+
+                listItem.appendChild(removeButton);
+                noteList.appendChild(listItem);
+                document.getElementById('note').value = '';
+                saveData(); // Save data whenever a new note is added
             }
-
-            if (currentDate.getDay() === 0) {
-                currentDate.setDate(currentDate.getDate() + 1);
-                continue;
-            }
-
-            if (currentDate.getDay() === 6 && !allowSaturday) {
-                currentDate.setDate(currentDate.getDate() + 1);
-                continue;
-            }
-
-            let row = table.insertRow(table.rows.length);
-
-            // Format Date with Day Name
-            let formattedDate = `${currentDate.toLocaleDateString('en-GB')} (${currentDate.toLocaleDateString('en-GB', { weekday: 'long' })})`;
-            row.insertCell(0).textContent = formattedDate;
-
-            for (let j = 0; j < selectedClasses.length; j++) {
-                let examSubject = (dayCount < examsForClasses[j].length)
-                    ? examsForClasses[j][dayCount] : "No Exam";
-                row.insertCell(j + 1).textContent = examSubject;
-            }
-
-            currentDate.setDate(currentDate.getDate() + 1);
-            if (wantGaps && dayCount < maxExams - 1 && currentDate.getDay() !== 0) {
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-
-            dayCount++;
         }
 
-        dateSheetDiv.appendChild(table);
+        // Function to save data to local storage
+        function saveData() {
+            const schoolName = document.getElementById('schoolName').value.trim();
+            if (!schoolName) {
+                document.getElementById('schoolNameError').textContent = "Please enter a school name.";
+                return; // Do not save if school name is empty
+            } else {
+                document.getElementById('schoolNameError').textContent = "";
+            }
 
-        const noteList = document.getElementById('noteList');
-        if (noteList.childNodes.length > 0) {
-            let noteSection = `<div class="note-section"><strong>Notes:</strong></div>`;
-            dateSheetDiv.innerHTML += noteSection;
-            dateSheetDiv.appendChild(noteList.cloneNode(true));
+            // Gather all data into an object
+            const examData = {
+                examType: document.getElementById('examType').value,
+                startDate: document.getElementById('startDate').value,
+                reportingTime: document.getElementById('reportingTime').value,
+                examTiming: document.getElementById('examTiming').value,
+                examDuration: document.getElementById('examDuration').value,
+                holidays: document.getElementById('holidays').value,
+                wantGaps: document.getElementById('wantGaps').checked,
+                allowSaturday: document.getElementById('allowSaturday').checked,
+                notes: Array.from(document.querySelectorAll('#noteList li')).map(li => li.textContent.replace('Remove', '').trim()),
+                selectedClasses: Array.from(document.querySelectorAll('#classList input[type=checkbox]:checked')).map(cb => cb.value),
+                subjects: {}
+            };
+
+            // Collect subjects for each selected class
+            examData.selectedClasses.forEach(className => {
+                const subjectInput = document.getElementById(`subjects${className}`);
+                if (subjectInput) {
+                    examData.subjects[className] = subjectInput.value;
+                }
+            });
+
+            // Save the collected data to localStorage
+            localStorage.setItem(`examData_${schoolName}`, JSON.stringify(examData));
         }
-    }
 
-    function calculateDispersalTime(examStartTime, examDuration) {
-        let [hours, minutes] = examStartTime.split(':').map(Number);
-        let additionalMinutes = 0;
+        // Function to load data from local storage
+        function loadData() {
+            const schoolName = document.getElementById('schoolName').value.trim();
+            if (!schoolName) {
+                document.getElementById('schoolNameError').textContent = "Please enter a school name.";
+                return;
+            }
 
-        if (!Number.isInteger(examDuration)) {
-            let decimalPart = examDuration - Math.floor(examDuration);
-            additionalMinutes = Math.round(decimalPart * 60);
-            examDuration = Math.floor(examDuration);
+            // Retrieve data from localStorage
+            const savedData = localStorage.getItem(`examData_${schoolName}`);
+            if (!savedData) {
+                alert("No data found for this school name.");
+                return; // Exit if no data found
+            }
+
+            const examData = JSON.parse(savedData);
+            document.getElementById('examType').value = examData.examType;
+            document.getElementById('startDate').value = examData.startDate;
+            document.getElementById('reportingTime').value = examData.reportingTime;
+            document.getElementById('examTiming').value = examData.examTiming;
+            document.getElementById('examDuration').value = examData.examDuration;
+            document.getElementById('holidays').value = examData.holidays;
+            document.getElementById('wantGaps').checked = examData.wantGaps;
+            document.getElementById('allowSaturday').checked = examData.allowSaturday;
+
+            // Load notes into the note list
+            const noteList = document.getElementById('noteList');
+            noteList.innerHTML ='';
+            examData.notes.forEach(note => {
+                const listItem = document.createElement('li');
+                listItem.textContent = note;
+                noteList.appendChild(listItem);
+            });
+
+            // Load selected classes and their subjects
+            document.querySelectorAll('#classList input[type=checkbox]').forEach(cb => {
+                cb.checked = examData.selectedClasses.includes(cb.value);
+            });
+            
+            // Regenerate subject input fields and fill in subject data
+            generateSubjectInputs();
+            examData.selectedClasses.forEach(className => {
+                const subjectInput = document.getElementById(`subjects${className}`);
+                if (subjectInput) {
+                    subjectInput.value = examData.subjects[className] || '';
+                }
+            });
         }
 
-        hours += examDuration;
-        minutes += additionalMinutes;
+        function deleteAllData() {
+            const schoolName = document.getElementById('schoolName').value.trim();
+            if (!schoolName) {
+                alert("Please enter a school name to delete its data.");
+                return;
+            }
 
-        if (minutes >= 60) {
-            hours += Math.floor(minutes / 60);
-            minutes = minutes % 60;
+            // Confirm deletion
+            const confirmDelete = confirm(`Are you sure you want to delete all data for school: ${schoolName}?`);
+            if (!confirmDelete) return;
+
+            // Remove data from localStorage
+            localStorage.removeItem(`examData_${schoolName}`);
+
+            // Clear all form fields
+            document.getElementById('examType').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('reportingTime').value = '';
+            document.getElementById('examTiming').value = '';
+            document.getElementById('examDuration').value = '';
+            document.getElementById('holidays').value = '';
+            document.getElementById('wantGaps').checked = false;
+            document.getElementById('allowSaturday').checked = false;
+            document.getElementById('noteList').innerHTML = '';
+
+            // Uncheck all class checkboxes and remove subject inputs
+            document.querySelectorAll('#classList input[type=checkbox]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('subjectsContainer').innerHTML = ''; // Clear subjects inputs
+
+            alert(`All data for school "${schoolName}" has been deleted.`);
         }
 
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-    }
+        function addHoliday() {
+            const holidayDateInput = document.getElementById('holidayDate');
+            const holidayList = document.getElementById('holidayList');
+            const holidaysField = document.getElementById('holidays');
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+            const holidayDate = holidayDateInput.value;
+            if (holidayDate) {
+                const listItem = document.createElement('li');
+                listItem.textContent = holidayDate;
+
+                // Add a remove button to each holiday date
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.onclick = function() {
+                    if (confirm("Are you sure you want to remove this holiday?")) {
+                        holidayList.removeChild(listItem);
+                        updateHolidaysField();
+                    }
+                };
+                
+                listItem.appendChild(removeButton);
+                holidayList.appendChild(listItem);
+
+                // Update the hidden field with the new list of dates
+                updateHolidaysField();
+                
+                // Clear the date input
+                holidayDateInput.value = '';
+            }
         }
-        return array;
-    }
 
-    function printDateSheet() {
-        const dateSheetDiv = document.getElementById('dateSheet');
-        const originalContent = document.body.innerHTML;
-        const printContent = dateSheetDiv.innerHTML;
-
-        document.body.innerHTML = `<html><head><title>Print Date Sheet</title></head><body>${printContent}</body></html>`;
-        window.print();
-        document.body.innerHTML = originalContent;
-    }
-</script>
+        function updateHolidaysField() {
+            const holidayList = document.getElementById('holidayList');
+            const holidaysField = document.getElementById('holidays');
+            const dates = Array.from(holidayList.children).map(item => item.textContent.replace('Remove', '').trim());
+            holidaysField.value = dates.join(',');
+        }
+    </script>
 </body>
 </html>
