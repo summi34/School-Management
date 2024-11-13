@@ -5,313 +5,269 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Date Sheet Generator (Version 1.0)</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f2f5;
-            margin: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            padding: 25px 50px 25px 25px;
-            background: linear-gradient(145deg, #ffffff, #e6e8ec);
-            border-radius: 15px;
-            box-shadow: 12px 12px 35px rgba(0, 0, 0, 0.15);
-        }
-        
-        }
-        h1 {
-            text-align: center;
-            color: #5a67d8;
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 16px;
-            color: #333;
-            margin-top: 10px;
-            display: block;
-        }
-        input[type="text"], input[type="date"], input[type="number"], input[type="time"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #dfe1e6;
-            border-radius: 6px;
-            margin-top: 5px;
-            margin-bottom: 20px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        input:focus {
-            border-color: #5a67d8;
-            outline: none;
-            box-shadow: 0 0 10px rgba(90, 103, 216, 0.5);
-            transform: scale(1.02);
-            transition: transform 0.3s ease;
-        }
-        input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2);
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #5a67d8;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.4s ease, box-shadow 0.4s ease;
-        }
-        button:hover {
-            background-color: #4c51bf;
-            box-shadow: 0 15px 25px rgba(90, 103, 216, 0.4);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #f8fafc;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        table, th, td {
-            border: 1px solid #dfe1e6;
-        }
-        th {
-            background-color: #5a67d8;
-            color: #fff;
-            font-weight: 600;
-            text-align: center;
-            padding: 12px;
-        }
-        td {
-            padding: 10px;
-            text-align: center;
-            font-size: 14px;
-            color: #333;
-        }
-        td:first-child {
-            text-align: left;
-        }
-        .top-info {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #5a67d8;
-        }
-        .note {
-            color: #555;
-            margin-top: 20px;
-        }
-        .note-section {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .note-list {
-            list-style-type: decimal;
-        }
-        .add-note-btn {
-            background-color: #4CAF50;
-            color: white;
-            margin-top: 10px;
-        }
-        .expired {
-            color: red;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        #content {
-            display: none; /* Hide content by default */
-        }
-        .greeting-container {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #5a67d8;
-            padding: 40px 0px 0px 0px;
-            border-radius: 10px; /* Rounded corners */
-            background: linear-gradient(145deg, #ffffff, #e6e8ec); /* Subtle gradient background */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            max-width: 500px; /* Limit the width of the container */
-            margin: 50px auto; /* Center horizontally with top margin */
-        }
+    body { 
+        font-family: 'Arial', sans-serif; 
+        background-color: #e9ecef; 
+        margin: 0; 
+        padding: 0; 
+    }
 
-        .greeting-text {
-            display: inline-block;
-            font-size: 28px; /* Larger text */
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #5a67d8, #8a5ee9); /* Gradient text color */
-            -webkit-background-clip: text; /* For gradient text effect */
-            -webkit-text-fill-color: transparent;
-            font-weight: 700; /* Bold text */
-            animation: fadeIn 1.5s ease-in-out; /* Fade-in animation */
-        }
+    .container { 
+        max-width: 800px; 
+        margin: 50px auto; 
+        padding: 30px; 
+        background: #ffffff; 
+        border-radius: 10px; 
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+    }
 
-        /* Add a subtle hover effect */
-        .greeting-text:hover {
-            transform: scale(1.05); /* Slight enlargement on hover */
-            transition: transform 0.3s ease; /* Smooth transition for scaling */
-        }
+    h1 { 
+        text-align: center; 
+        color: #333; 
+        font-size: 28px; 
+        font-weight: bold; 
+        margin-bottom: 20px; 
+    }
 
-        /* Keyframes for fade-in animation */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        .navbar {
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            width: 100%;
-            background-color: #4a90e2;
-        }
+    label { 
+        font-size: 16px; 
+        color: #555; 
+        margin-top: 10px; 
+        display: block; 
+    }
 
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
+    input[type="text"], input[type="date"], input[type="number"], input[type="time"], textarea { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #ced4da; 
+        border-radius: 5px; 
+        margin-top: 5px; 
+        margin-bottom: 20px; 
+        transition: border-color 0.3s ease; 
+    }
 
-        .navbar a:hover {
-            color: #ddd;
-        }
-        .testing-banner {
-            width: 100%;
-            background-color: #ff5722;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-        }
-        .remove-button {
-            background-color: #ff4d4d;
-            width: 70px;
-            height: 20px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 2px 5px; /* Reduced padding for a smaller button */
-            margin-left: 10px;
-            cursor: pointer;
-            font-size: 12px; /* Smaller font size */
-            transition: background-color 0.3s ease;
-        }
+    input:focus { 
+        border-color: #007bff; 
+        outline: none; 
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+    }
 
-        .remove-button:hover {
-            background-color: #ff1a1a;
-        }
+    button { 
+        display: block; 
+        width: 100%; 
+        padding: 12px; 
+        background-color: #007bff; 
+        color: #fff; 
+        font-size: 16px; 
+        font-weight: bold; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer; 
+        transition: background-color 0.3s ease; 
+    }
 
-        .draggable {
-            cursor: move;
-            user-select: none;
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-            position: relative;
-        }
+    button:hover { 
+        background-color: #0056b3; 
+    }
 
-        .draggable:hover {
-            background-color: #f0f4ff;
-            transform: scale(1.02);
-        }
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-top: 20px; 
+    }
 
-        .draggable.dragging {
-            opacity: 0.5;
-            background-color: #e8e8e8;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    table, th, td { 
+        border: 1px solid #dee2e6; 
+    }
 
-        .drag-over {
-            background-color: #e3f2fd;
-            border: 2px dashed #2196f3;
-        }
+    th { 
+        background-color: #007bff; 
+        color: #fff; 
+        font-weight: bold; 
+        text-align: center; 
+        padding: 12px; 
+    }
 
-        .invalid-drop {
-            animation: shake 0.5s ease-in-out;
-            background-color: #ffebee;
-        }
+    td { 
+        padding: 10px; 
+        text-align: center; 
+        font-size: 14px; 
+        color: #333; 
+    }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
+    td:first-child { 
+        text-align: left; 
+    }
 
-        /* Visual feedback for valid/invalid drop targets */
-        .valid-target {
-            background-color: rgba(76, 175, 80, 0.1);
-        }
+    .top-info { 
+        text-align: center; 
+        margin-top: 10px; 
+        font-size: 18px; 
+        font-weight: bold; 
+        color: #007bff; 
+    }
 
-        .invalid-target {
-            background-color: rgba(244, 67, 54, 0.1);
-        }
-        #undoButton, #redoButton {
-            width: 48%; /* Take up nearly half the width */
-            background-color: #4a90e2;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .note { 
+        color: #555; 
+        margin-top: 20px; 
+    }
 
-        #undoButton:disabled, #redoButton:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
+    .note-section { 
+        font-size: 16px; 
+        color: #333; 
+        margin-bottom: 10px; 
+    }
 
-        #undoButton:hover:not(:disabled), #redoButton:hover:not(:disabled) {
-            background-color: #357abd;
-        }
+    .note-list { 
+        list-style-type: decimal; 
+    }
 
-        .error-message {
-            color: red;
-            font-size: 14px;
-            margin-top: -15px;
-            margin-bottom: 15px;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                width: 90%;
-            }
-        }
+    .add-note-btn { 
+        background-color: #28a745; 
+        color: white; 
+        margin-top: 10px; 
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                overflow-x: auto;
-            }
-        }
+    .expired { 
+        color: red; 
+        text-align: center; 
+        font-size: 24px; 
+        font-weight: bold; 
+    }
 
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .navbar a {
-                margin: 5px 0;
-            }
-        }
+    #content { 
+        display: none; 
+    }
+
+    .navbar { 
+        margin-top: 40px; 
+        display: flex; 
+        justify-content: space-around; 
+        align-items: center; 
+        padding: 20px; 
+        background-color: #343a40; 
+    }
+
+    .navbar a { 
+        color: white; 
+        text-decoration: none; 
+        margin: 0 15px; 
+        font-weight: bold; 
+    }
+
+    .navbar a:hover { 
+        color: #ddd; 
+    }
+
+    .testing-banner { 
+        width: 100%; 
+        background-color: #dc3545; 
+        color: white; 
+        text-align: center; 
+        padding: 10px; 
+        font-weight: bold; 
+        letter-spacing: 1px; 
+        position: fixed; 
+        top: 0; 
+        z-index: 1000; 
+    }
+
+    .remove-button { 
+        background-color: #ff4d4d; 
+        color: white; 
+        border: none; 
+        border-radius: 4px; 
+        padding: 2px 5px; 
+        margin-left: 10px; 
+        cursor: pointer; 
+        font-size: 12px; 
+        transition: background-color 0.3s ease; 
+    }
+
+    .remove-button:hover { 
+        background-color: #ff1a1a; 
+    }
+
+    .draggable { 
+        cursor: move; 
+        user-select: none; 
+        background-color: #ffffff; 
+        transition: all 0.3s ease; 
+    }
+
+    .draggable:hover { 
+        background-color: #f0f4ff; 
+    }
+
+    .draggable.dragging { 
+        opacity: 0.5; 
+        background-color: #e8e8e8; 
+    }
+
+    .drag-over { 
+        background-color: #e3f2fd; 
+        border: 2px dashed #2196f3; 
+    }
+
+    .invalid-drop { 
+        animation: shake 0.5s ease-in-out; 
+        background-color: #ffebee; 
+    }
+
+    @keyframes shake { 
+        0%, 100% { transform: translateX(0); } 
+        25% { transform: translateX(-5px); } 
+        75% { transform: translateX(5px); } 
+    }
+
+    .valid-target { 
+        background-color: rgba(76, 175, 80, 0.1); 
+    }
+
+    .invalid-target { 
+        background-color: rgba(244, 67, 54, 0.1); 
+    }
+
+    #undoButton, #redoButton { 
+        width: 48%; 
+        background-color: #007bff; 
+        color: white; 
+        padding: 12px; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer; 
+        transition: background-color 0.3s ease; 
+    }
+
+    #undoButton:disabled, #redoButton:disabled { 
+        background-color: #cccccc; 
+        cursor: not-allowed; 
+    }
+
+    #undoButton:hover:not(:disabled), #redoButton:hover:not(:disabled) { 
+        background-color: #0056b3; 
+    }
+
+    .error-message { 
+        color: red; 
+        font-size: 14px; 
+        margin-top: -15px; 
+        margin-bottom: 15px; 
+    }
+
+    @media (max-width: 768px) { 
+        .container { 
+            padding: 15px; 
+            width: 90%; 
+        } 
+        .navbar { 
+            flex-direction: column; 
+            align-items: flex-start; 
+        } 
+        .navbar a { 
+            margin: 5px 0; 
+        } 
+    }
     </style>
 </head>
 <body>
@@ -323,12 +279,6 @@
         <a href="Exam date sheet genrator (Version 1.0).html">Exam Date Sheet</a>
         <a href="Question Paper Generator 3.html">Question Paper Genrator</a>
     </nav>
-
-    <div class="greeting-container" id="greeting">
-        <div class="greeting-text" id="welcomeText"></div>
-        <br>
-        <div class="greeting-text" id="madeInText"></div>
-    </div>
 
     <div class="container" id="content">
         <h1>Exam Date Sheet Generator (Version 1.0)</h1>
@@ -414,31 +364,6 @@
     </div>
 
     <script>
-        // Variables for text animation
-        const welcomeText = "Welcome To SmartSchool.AI";
-        const welcomeTextElement = document.getElementById('welcomeText');
-        let charIndex = 0;
-
-        // Function to animate text
-        function animateText(text, element, callback) {
-            if (charIndex < text.length) {
-                element.innerHTML += text.charAt(charIndex);
-                charIndex++;
-                setTimeout(() => animateText(text, element, callback), 100);
-            } else {
-                charIndex = 0;
-                if (callback) callback(); // Run callback after animation
-            }
-        }
-
-        window.onload = function() {
-            // Animate "Welcome To SmartSchool.AI" first
-            animateText(welcomeText, welcomeTextElement, function() {
-                // After both animations, show the main content but do not hide the greeting
-                document.getElementById('content').style.display = 'block'; // Show the content
-            });
-        };
-
         const startDateValid = new Date('2024-09-21T00:00:00');
         const expirationDate = new Date('2025-03-31T23:59:59');
         const today = new Date();
